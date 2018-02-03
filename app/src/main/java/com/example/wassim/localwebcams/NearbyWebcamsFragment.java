@@ -7,10 +7,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.wassim.localwebcams.dummy.DummyContent.DummyItem;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 /**
  * A fragment representing a list of Items.
@@ -38,7 +36,7 @@ public class NearbyWebcamsFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 111;
-    MyItemRecyclerViewAdapter adapter;
+    MyItemRecyclerViewAdapter2 adapter;
     FusedLocationProviderClient client;
     // TODO: Customize parameters
     private int mColumnCount = 1;
@@ -55,17 +53,6 @@ public class NearbyWebcamsFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public NearbyWebcamsFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static LiveWebcamsFragment newInstance(int columnCount) {
-        LiveWebcamsFragment fragment = new LiveWebcamsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-
     }
 
     public static String buildURL(String locationLatitude1, String locationLongitude1) {
@@ -100,15 +87,8 @@ public class NearbyWebcamsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Construct a FusedLocationProviderClient.
         client = LocationServices.getFusedLocationProviderClient(getActivity());
-        adapter = new MyItemRecyclerViewAdapter(getContext(), null, (ItemFragment.OnListFragmentInteractionListener) mListener);
-
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
+        adapter = new MyItemRecyclerViewAdapter2(getActivity(), null, (FavoriteWebcamsFragment.OnListFragmentInteractionListener) mListener);
     }
 
     /**
@@ -125,10 +105,12 @@ public class NearbyWebcamsFragment extends Fragment {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
+                    getLocationLatLong();
                 }
             }
         }
     }
+
 
     /**
      * Prompts the user for permission to use the device location.
@@ -139,13 +121,12 @@ public class NearbyWebcamsFragment extends Fragment {
          * device. The result of the permission request is handled by a callback,
          * onRequestPermissionsResult.
          */
-        if (ContextCompat.checkSelfPermission(getContext(),
+        if (checkSelfPermission(getContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
@@ -159,10 +140,12 @@ public class NearbyWebcamsFragment extends Fragment {
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
-                            mLastKnownLocation = task.getResult();
-                            locationLat = mLastKnownLocation.getLatitude();
-                            locationLong = mLastKnownLocation.getLongitude();
-                            Log.e("TAG", "Current location latitude is " + locationLat + "\n location longitude is " + locationLong);
+                            if (task != null) {
+                                mLastKnownLocation = task.getResult();
+                                locationLat = mLastKnownLocation.getLatitude();
+                                locationLong = mLastKnownLocation.getLongitude();
+                                Log.e("TAG", "Current location latitude is " + locationLat + "\n location longitude is " + locationLong);
+                            }
                         } else {
                             Log.d("TAG", "Current location is null. Using defaults.");
                             Log.e("TAG", "Exception: %s", task.getException());
@@ -192,20 +175,13 @@ public class NearbyWebcamsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
-
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(adapter);
-        }
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(false);
         return view;
     }
 
@@ -213,8 +189,7 @@ public class NearbyWebcamsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        getLocationPermission();
-        getLocationLatLong();
+
     }
 
 
@@ -235,6 +210,16 @@ public class NearbyWebcamsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.e("TAG", client + "");
+            getLocationPermission();
+            getLocationLatLong();
+        }
+
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -248,6 +233,6 @@ public class NearbyWebcamsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(String item);
     }
 }

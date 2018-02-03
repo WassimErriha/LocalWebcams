@@ -2,83 +2,49 @@ package com.example.wassim.localwebcams;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.example.wassim.localwebcams.dummy.DummyContent.DummyItem;
+import com.example.wassim.localwebcams.Objects.Webcam;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
-public class LiveWebcamsFragment extends Fragment {
+public class LiveWebcamsFragment extends Fragment implements MyItemRecyclerViewAdapter.onListItemClickListener {
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
     MyItemRecyclerViewAdapter adapter;
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public LiveWebcamsFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static LiveWebcamsFragment newInstance(int columnCount) {
-        LiveWebcamsFragment fragment = new LiveWebcamsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        adapter = new MyItemRecyclerViewAdapter(getContext(), null, (ItemFragment.OnListFragmentInteractionListener) mListener);
-
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
+        adapter = new MyItemRecyclerViewAdapter(getActivity(), null, this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
-
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(adapter);
-        }
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(false);
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         @SuppressLint("StaticFieldLeak")
         FetchWebcams fetchWebcams = new FetchWebcams() {
             @Override
@@ -87,8 +53,7 @@ public class LiveWebcamsFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         };
-        //fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/continent=NA?lang=en&show=webcams%3Aimage%2Clocation%2Clive%2Cstatistics%2Curl%2Cuser");
-        fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/limit=100/property=live?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer");
+        fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/limit=50/property=live?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer");
     }
 
     @Override
@@ -108,18 +73,17 @@ public class LiveWebcamsFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public String onListItemClick(Webcam webcam) {
+        Toast.makeText(getContext(), "hello " + webcam.getId(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
+        intent.putExtra("webcam", webcam);
+        getActivity().startActivity(intent);
+        return null;
+    }
+
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(String itemId);
     }
 }

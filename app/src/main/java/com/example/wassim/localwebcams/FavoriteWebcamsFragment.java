@@ -4,14 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.example.wassim.localwebcams.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.
@@ -19,11 +16,11 @@ import com.example.wassim.localwebcams.dummy.DummyContent.DummyItem;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ItemFragment extends Fragment {
+public class FavoriteWebcamsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    MyItemRecyclerViewAdapter adapter;
+    MyItemRecyclerViewAdapter4 adapter;
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -32,13 +29,13 @@ public class ItemFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ItemFragment() {
+    public FavoriteWebcamsFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ItemFragment newInstance(int columnCount) {
-        ItemFragment fragment = new ItemFragment();
+    public static FavoriteWebcamsFragment newInstance(int columnCount) {
+        FavoriteWebcamsFragment fragment = new FavoriteWebcamsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -49,7 +46,7 @@ public class ItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new MyItemRecyclerViewAdapter(getContext(), null, mListener);
+        adapter = new MyItemRecyclerViewAdapter4(getActivity(), null, mListener);
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
@@ -62,18 +59,12 @@ public class ItemFragment extends Fragment {
 
 
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
-
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(adapter);
-        }
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(false);
         return view;
     }
 
@@ -86,11 +77,9 @@ public class ItemFragment extends Fragment {
             protected void onPostExecute(String response) {
                 adapter.swapData(response);
                 adapter.notifyDataSetChanged();
-
-
             }
         };
-        fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/continent=NA?lang=en&show=webcams%3Aimage%2Clocation%2Clive%2Cstatistics%2Curl%2Cuser");
+        fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/webcam=1010244116%2C1010908662%2C1040549429?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer%2Clive");
 
     }
 
@@ -123,6 +112,6 @@ public class ItemFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(String item);
     }
 }

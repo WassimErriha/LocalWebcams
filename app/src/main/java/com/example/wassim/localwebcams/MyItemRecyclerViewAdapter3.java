@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.wassim.localwebcams.FavoriteWebcamsFragment.OnListFragmentInteractionListener;
 import com.example.wassim.localwebcams.Objects.Location;
 import com.example.wassim.localwebcams.Objects.Response;
 import com.example.wassim.localwebcams.Objects.Webcam;
@@ -19,14 +20,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
+public class MyItemRecyclerViewAdapter3 extends RecyclerView.Adapter<MyItemRecyclerViewAdapter3.ViewHolder> {
 
     private static List<Webcam> webcamList = null;
+    private final OnListFragmentInteractionListener mListener;
     private Context mContext;
-    private onListItemClickListener mItemClickListner;
 
-    public MyItemRecyclerViewAdapter(Context context, List<Webcam> items, onListItemClickListener itemClickListener) {
-
+    public MyItemRecyclerViewAdapter3(Context context, List<Webcam> items, OnListFragmentInteractionListener listener) {
         if (webcamList != null) {
             webcamList.clear();
             webcamList = null;
@@ -34,7 +34,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
         mContext = context;
         webcamList = items;
-        mItemClickListner = itemClickListener;
+        mListener = listener;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         int ithemcount = getItemCount();
-        final Webcam webcam = webcamList.get(position);
+        Webcam webcam = webcamList.get(position);
         String title = webcam.getTitle();
         holder.mTitleTextView.setText(title);
         String imageLink = webcam.getImage().getDaylight().getThumbnail();
@@ -66,10 +66,15 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             String fullLocation = city + "," + region + "," + country + "," + continent;
             holder.mLocationTextView.setText(fullLocation);
         }
+        holder.test.setText("Test");
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemClickListner.onListItemClick(webcam);
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListFragmentInteraction(holder.mItem);
+                }
             }
         });
     }
@@ -102,16 +107,13 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         notifyItemRangeChanged(0, webcamList.size());
     }
 
-    public interface onListItemClickListener {
-        String onListItemClick(Webcam webcam);
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final ImageView mImageView;
         public final TextView mTitleTextView;
         public final TextView mLocationTextView;
         public final TextView test;
+        public String mItem;
 
 
         public ViewHolder(View view) {

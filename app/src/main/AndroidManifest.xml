@@ -13,8 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDewyfj5xxJdrmqW63_zAws4Zu4_WRvWMI" />
+
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="AIzaSyAzjHlTSr0G1RRMFER12O-K9tdHxxmKr50" /> -->
+
         <activity
             android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,6 +32,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".WebcamDetailsActivity"></activity>
+
+        <provider
+            android:name=".data.WebcamProvider"
+            android:authorities="com.example.wassim.localwebcams"
+            android:exported="false" />
     </application>
 
 </manifest>
