@@ -1,3 +1,4 @@
+
 package com.example.wassim.localwebcams.Objects;
 
 import android.os.Parcel;
@@ -6,7 +7,6 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Result implements Parcelable {
@@ -28,48 +28,48 @@ public class Result implements Parcelable {
     };
     @SerializedName("offset")
     @Expose
-    private int offset;
+    private Integer offset;
     @SerializedName("limit")
     @Expose
-    private int limit;
+    private Integer limit;
     @SerializedName("total")
     @Expose
-    private int total;
+    private Integer total;
     @SerializedName("webcams")
     @Expose
-    private List<Webcam> webcams = new ArrayList<Webcam>();
+    private List<Webcam> webcams = null;
 
     protected Result(Parcel in) {
-        this.offset = ((int) in.readValue((int.class.getClassLoader())));
-        this.limit = ((int) in.readValue((int.class.getClassLoader())));
-        this.total = ((int) in.readValue((int.class.getClassLoader())));
-        in.readList(this.webcams, (Webcam.class.getClassLoader()));
+        this.offset = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.limit = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.total = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        in.readList(this.webcams, (com.example.wassim.localwebcams.Objects.Webcam.class.getClassLoader()));
     }
 
     public Result() {
     }
 
-    public int getOffset() {
+    public Integer getOffset() {
         return offset;
     }
 
-    public void setOffset(int offset) {
+    public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
-    public int getLimit() {
+    public Integer getLimit() {
         return limit;
     }
 
-    public void setLimit(int limit) {
+    public void setLimit(Integer limit) {
         this.limit = limit;
     }
 
-    public int getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 

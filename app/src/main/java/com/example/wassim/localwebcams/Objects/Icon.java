@@ -1,3 +1,4 @@
+
 package com.example.wassim.localwebcams.Objects;
 
 import android.os.Parcel;
@@ -25,32 +26,32 @@ public class Icon implements Parcelable {
     };
     @SerializedName("width")
     @Expose
-    private int width;
+    private Integer width;
     @SerializedName("height")
     @Expose
-    private int height;
+    private Integer height;
 
     protected Icon(Parcel in) {
-        this.width = ((int) in.readValue((int.class.getClassLoader())));
-        this.height = ((int) in.readValue((int.class.getClassLoader())));
+        this.width = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.height = ((Integer) in.readValue((Integer.class.getClassLoader())));
     }
 
     public Icon() {
     }
 
-    public int getWidth() {
+    public Integer getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(Integer width) {
         this.width = width;
     }
 
-    public int getHeight() {
+    public Integer getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(Integer height) {
         this.height = height;
     }
 

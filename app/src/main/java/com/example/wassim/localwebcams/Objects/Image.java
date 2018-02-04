@@ -1,3 +1,4 @@
+
 package com.example.wassim.localwebcams.Objects;
 
 import android.os.Parcel;
@@ -34,13 +35,13 @@ public class Image implements Parcelable {
     private Sizes sizes;
     @SerializedName("update")
     @Expose
-    private int update;
+    private Integer update;
 
     protected Image(Parcel in) {
         this.current = ((Current) in.readValue((Current.class.getClassLoader())));
         this.daylight = ((Daylight) in.readValue((Daylight.class.getClassLoader())));
         this.sizes = ((Sizes) in.readValue((Sizes.class.getClassLoader())));
-        this.update = ((int) in.readValue((int.class.getClassLoader())));
+        this.update = ((Integer) in.readValue((Integer.class.getClassLoader())));
     }
 
     public Image() {
@@ -70,11 +71,11 @@ public class Image implements Parcelable {
         this.sizes = sizes;
     }
 
-    public int getUpdate() {
+    public Integer getUpdate() {
         return update;
     }
 
-    public void setUpdate(int update) {
+    public void setUpdate(Integer update) {
         this.update = update;
     }
 

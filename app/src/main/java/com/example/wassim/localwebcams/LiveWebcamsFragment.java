@@ -52,7 +52,7 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
                 adapter.notifyDataSetChanged();
             }
         };
-        fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/limit=50/property=live?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer");
+        fetchWebcams.execute(RemoteDataURIBuilder.STATIC_LIVE_WEBCAMS_URL);
     }
 
     @Override

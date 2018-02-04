@@ -1,3 +1,4 @@
+
 package com.example.wassim.localwebcams.Objects;
 
 import android.os.Parcel;
@@ -38,15 +39,9 @@ public class Webcam implements Parcelable {
     @SerializedName("location")
     @Expose
     private Location location;
-    @SerializedName("statistics")
+    @SerializedName("player")
     @Expose
-    private Statistics statistics;
-    @SerializedName("url")
-    @Expose
-    private Url url;
-    @SerializedName("user")
-    @Expose
-    private User user;
+    private Player player;
 
     protected Webcam(Parcel in) {
         this.id = ((String) in.readValue((String.class.getClassLoader())));
@@ -54,9 +49,7 @@ public class Webcam implements Parcelable {
         this.title = ((String) in.readValue((String.class.getClassLoader())));
         this.image = ((Image) in.readValue((Image.class.getClassLoader())));
         this.location = ((Location) in.readValue((Location.class.getClassLoader())));
-        this.statistics = ((Statistics) in.readValue((Statistics.class.getClassLoader())));
-        this.url = ((Url) in.readValue((Url.class.getClassLoader())));
-        this.user = ((User) in.readValue((User.class.getClassLoader())));
+        this.player = ((Player) in.readValue((Player.class.getClassLoader())));
     }
 
     public Webcam() {
@@ -102,28 +95,12 @@ public class Webcam implements Parcelable {
         this.location = location;
     }
 
-    public Statistics getStatistics() {
-        return statistics;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setStatistics(Statistics statistics) {
-        this.statistics = statistics;
-    }
-
-    public Url getUrl() {
-        return url;
-    }
-
-    public void setUrl(Url url) {
-        this.url = url;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -132,9 +109,7 @@ public class Webcam implements Parcelable {
         dest.writeValue(title);
         dest.writeValue(image);
         dest.writeValue(location);
-        dest.writeValue(statistics);
-        dest.writeValue(url);
-        dest.writeValue(user);
+        dest.writeValue(player);
     }
 
     public int describeContents() {

@@ -1,3 +1,4 @@
+
 package com.example.wassim.localwebcams.Objects;
 
 import android.os.Parcel;
@@ -6,20 +7,20 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Response implements Parcelable {
+public class Example implements Parcelable {
 
-    public final static Creator<Response> CREATOR = new Creator<Response>() {
+    public final static Parcelable.Creator<Example> CREATOR = new Creator<Example>() {
 
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public Response createFromParcel(Parcel in) {
-            return new Response(in);
+        public Example createFromParcel(Parcel in) {
+            return new Example(in);
         }
 
-        public Response[] newArray(int size) {
-            return (new Response[size]);
+        public Example[] newArray(int size) {
+            return (new Example[size]);
         }
 
     };
@@ -30,12 +31,12 @@ public class Response implements Parcelable {
     @Expose
     private Result result;
 
-    protected Response(Parcel in) {
+    protected Example(Parcel in) {
         this.status = ((String) in.readValue((String.class.getClassLoader())));
         this.result = ((Result) in.readValue((Result.class.getClassLoader())));
     }
 
-    public Response() {
+    public Example() {
     }
 
     public String getStatus() {

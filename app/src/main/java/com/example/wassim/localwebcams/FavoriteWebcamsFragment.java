@@ -3,6 +3,7 @@ package com.example.wassim.localwebcams;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,8 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
+import com.example.wassim.localwebcams.data.WebcamContract;
 
-public class FavoriteWebcamsFragment extends Fragment implements FavoriteWebcamsRecyclerViewAdapter.onListItemClickListener {
+import java.util.ArrayList;
+
+public class FavoriteWebcamsFragment extends Fragment
+        implements FavoriteWebcamsRecyclerViewAdapter.onListItemClickListener {
 
     FavoriteWebcamsRecyclerViewAdapter adapter;
 
@@ -51,7 +56,8 @@ public class FavoriteWebcamsFragment extends Fragment implements FavoriteWebcams
                 adapter.notifyDataSetChanged();
             }
         };
-        fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/webcam=1010244116%2C1010908662%2C1040549429?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer%2Clive");
+        ArrayList webcamIds = getFavoriteWebcamIds();
+        fetchWebcams.execute(RemoteDataURIBuilder.buildURLWithFavoriteWebcams(webcamIds));
 
     }
 
@@ -62,5 +68,26 @@ public class FavoriteWebcamsFragment extends Fragment implements FavoriteWebcams
         intent.putExtra("webcam", webcam);
         getActivity().startActivity(intent);
         return null;
+    }
+
+    private ArrayList getFavoriteWebcamIds() {
+        ArrayList webcamIdsArray = new ArrayList<>();
+        String[] favoriteMovieIdsProjection = {WebcamContract.WebcamEntry.COLUMN_WEBCAM_ID};
+        Cursor fmCursor = getActivity().getContentResolver().query(WebcamContract.WebcamEntry.CONTENT_URI
+                , favoriteMovieIdsProjection
+                , null
+                , null
+                , null);
+        try {
+            while (fmCursor.moveToNext()) {
+                String movieId = fmCursor.getString(fmCursor.getColumnIndex(
+                        WebcamContract.WebcamEntry.COLUMN_WEBCAM_ID));
+                webcamIdsArray.add(movieId);
+            }
+        } finally {
+            fmCursor.close();
+        }
+        Toast.makeText(getContext(), "hello " + webcamIdsArray.toString(), Toast.LENGTH_LONG).show();
+        return webcamIdsArray;
     }
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -23,9 +22,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecyclerViewAdapter.onListItemClickListener {
@@ -40,35 +36,6 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
     private String nearbyWebcamsUrl;
 
     public NearbyWebcamsFragment() {
-    }
-
-    public static String buildURL(String locationLatitude1, String locationLongitude1) {
-        if (locationLatitude1 == null || locationLatitude1 == null) {
-            locationLatitude1 = "37.7704433522854";
-            locationLongitude1 = "-122.43026733398438";
-        }
-        final String BASE_URL = "https://webcamstravel.p.mashape.com/webcams/list";
-        final String LANGUAGE_QUERY_PARAM = "lang";
-        final String LANGUAGE_QUERY_VALUE = "en";
-        final String SHOW_QUERY_PARAM = "show";
-        final String SHOW_QUERY_CONCATENATED_VALUE = "webcams:image,location,player,live";
-//        final String NEARBY_QUERY_PARAM = "nearby";
-//        String nearbyConcatenatedQueryValue = "webcams:image,location,player,live";
-        final String LOCATION_RADIUS = "1000";
-        String concatenatedPath = "nearby=" + locationLatitude1 + "," + locationLongitude1 + "," + LOCATION_RADIUS;
-        Uri.Builder uri = Uri.parse(BASE_URL).buildUpon()
-                .appendEncodedPath(concatenatedPath)
-                .appendQueryParameter(LANGUAGE_QUERY_PARAM, LANGUAGE_QUERY_VALUE)
-                .appendQueryParameter(SHOW_QUERY_PARAM, SHOW_QUERY_CONCATENATED_VALUE);
-        uri.build();
-        URL url = null;
-        try {
-            url = new URL(uri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        Log.e("TAG", uri.toString());
-        return url.toString();
     }
 
     @Override
@@ -97,7 +64,6 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
             }
         }
     }
-
 
     /**
      * Prompts the user for permission to use the device location.
@@ -135,7 +101,7 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                             locationLat = 37.7704433522854;
                             locationLong = -122.43026733398438;
                         }
-                        nearbyWebcamsUrl = buildURL(Double.toString(locationLat), Double.toString(locationLong));
+                        nearbyWebcamsUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(locationLat), Double.toString(locationLong));
                         @SuppressLint("StaticFieldLeak")
                         FetchWebcams fetchWebcams = new FetchWebcams() {
                             @Override

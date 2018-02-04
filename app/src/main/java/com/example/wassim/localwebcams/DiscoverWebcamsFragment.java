@@ -30,6 +30,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallback, DiscoverWebcamsRecyclerViewAdapter.onListItemClickListener {
 
+    private static final double DEFAULT_LOCATION_LATITUDE = 37;
+    private static final double DEFAULT_LOCATION_LONGITUDE = -122;
     DiscoverWebcamsRecyclerViewAdapter adapter;
     boolean isMapContainerVisible = true;
     private GoogleMap mMap;
@@ -51,11 +53,11 @@ public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallb
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_item_list_with_map, container, false);
         final Context context = view.getContext();
-        ImageView imageView = (ImageView) view.findViewById(R.id.get_location_view);
+        ImageView imageView = view.findViewById(R.id.get_location_view);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.map_container);
+                FrameLayout frameLayout = view.findViewById(R.id.map_container);
                 if (isMapContainerVisible) {
                     frameLayout.setVisibility(View.GONE);
                     isMapContainerVisible = false;
@@ -64,19 +66,15 @@ public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallb
                     frameLayout.setVisibility(View.VISIBLE);
                     isMapContainerVisible = true;
                 }
-
-
             }
         });
         // Set the adapter
-
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_with_map);
+        RecyclerView recyclerView = view.findViewById(R.id.list_with_map);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(false);
         return view;
     }
-
 
     @Override
     public void onResume() {
@@ -87,9 +85,11 @@ public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallb
             protected void onPostExecute(String response) {
                 adapter.swapData(response);
                 adapter.notifyDataSetChanged();
+
             }
         };
-        fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/nearby=37.7704433522854,-122.43026733398438,1000?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer%2Clive'");
+        String discoverWebcamsUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(DEFAULT_LOCATION_LATITUDE), Double.toString(DEFAULT_LOCATION_LONGITUDE));
+        fetchWebcams.execute(discoverWebcamsUrl);
     }
 
     @Override
@@ -145,7 +145,8 @@ public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallb
                         adapter.notifyDataSetChanged();
                     }
                 };
-                fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/nearby=" + point.latitude + "," + point.longitude + ",1000?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer%2Clive'");
+                String discoverWebcamsUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(point.latitude), Double.toString(point.longitude));
+                fetchWebcams.execute(discoverWebcamsUrl);
             }
         });
     }

@@ -1,3 +1,4 @@
+
 package com.example.wassim.localwebcams.Objects;
 
 import android.os.Parcel;
@@ -46,13 +47,16 @@ public class Location implements Parcelable {
     private String continentCode;
     @SerializedName("latitude")
     @Expose
-    private double latitude;
+    private Double latitude;
     @SerializedName("longitude")
     @Expose
-    private double longitude;
+    private Double longitude;
     @SerializedName("timezone")
     @Expose
     private String timezone;
+    @SerializedName("wikipedia")
+    @Expose
+    private String wikipedia;
 
     protected Location(Parcel in) {
         this.city = ((String) in.readValue((String.class.getClassLoader())));
@@ -62,9 +66,10 @@ public class Location implements Parcelable {
         this.countryCode = ((String) in.readValue((String.class.getClassLoader())));
         this.continent = ((String) in.readValue((String.class.getClassLoader())));
         this.continentCode = ((String) in.readValue((String.class.getClassLoader())));
-        this.latitude = ((double) in.readValue((double.class.getClassLoader())));
-        this.longitude = ((double) in.readValue((double.class.getClassLoader())));
+        this.latitude = ((Double) in.readValue((Double.class.getClassLoader())));
+        this.longitude = ((Double) in.readValue((Double.class.getClassLoader())));
         this.timezone = ((String) in.readValue((String.class.getClassLoader())));
+        this.wikipedia = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public Location() {
@@ -126,19 +131,19 @@ public class Location implements Parcelable {
         this.continentCode = continentCode;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
@@ -148,6 +153,14 @@ public class Location implements Parcelable {
 
     public void setTimezone(String timezone) {
         this.timezone = timezone;
+    }
+
+    public String getWikipedia() {
+        return wikipedia;
+    }
+
+    public void setWikipedia(String wikipedia) {
+        this.wikipedia = wikipedia;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -161,6 +174,7 @@ public class Location implements Parcelable {
         dest.writeValue(latitude);
         dest.writeValue(longitude);
         dest.writeValue(timezone);
+        dest.writeValue(wikipedia);
     }
 
     public int describeContents() {
