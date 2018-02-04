@@ -2,6 +2,7 @@ package com.example.wassim.localwebcams;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -14,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.wassim.localwebcams.Objects.Webcam;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,33 +28,17 @@ import java.net.URL;
 
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
-public class NearbyWebcamsFragment extends Fragment {
+public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecyclerViewAdapter.onListItemClickListener {
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 111;
-    MyItemRecyclerViewAdapter2 adapter;
+    NearbyWebcamsRecyclerViewAdapter adapter;
     FusedLocationProviderClient client;
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
-    private LiveWebcamsFragment.OnListFragmentInteractionListener mListener;
     private Location mLastKnownLocation;
     private boolean mLocationPermissionGranted;
     private double locationLat;
     private double locationLong;
     private String nearbyWebcamsUrl;
-    //private boolean mLocationPermissionGranted = true;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public NearbyWebcamsFragment() {
     }
 
@@ -88,7 +75,7 @@ public class NearbyWebcamsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = LocationServices.getFusedLocationProviderClient(getActivity());
-        adapter = new MyItemRecyclerViewAdapter2(getActivity(), null, (FavoriteWebcamsFragment.OnListFragmentInteractionListener) mListener);
+        adapter = new NearbyWebcamsRecyclerViewAdapter(getActivity(), null, this);
     }
 
     /**
@@ -116,11 +103,6 @@ public class NearbyWebcamsFragment extends Fragment {
      * Prompts the user for permission to use the device location.
      */
     private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
         if (checkSelfPermission(getContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -186,31 +168,6 @@ public class NearbyWebcamsFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LiveWebcamsFragment.OnListFragmentInteractionListener) {
-            mListener = (LiveWebcamsFragment.OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
@@ -218,21 +175,14 @@ public class NearbyWebcamsFragment extends Fragment {
             getLocationPermission();
             getLocationLatLong();
         }
-
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(String item);
+    @Override
+    public String onListItemClick(Webcam webcam) {
+        Toast.makeText(getContext(), "hello " + webcam.getId(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
+        intent.putExtra("webcam", webcam);
+        getActivity().startActivity(intent);
+        return null;
     }
 }

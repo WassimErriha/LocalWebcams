@@ -2,6 +2,7 @@ package com.example.wassim.localwebcams;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.wassim.localwebcams.Objects.Webcam;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,17 +27,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
-public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallback {
 
-    MyItemRecyclerViewAdapter3 adapter;
+public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallback, DiscoverWebcamsRecyclerViewAdapter.onListItemClickListener {
+
+    DiscoverWebcamsRecyclerViewAdapter adapter;
     boolean isMapContainerVisible = true;
-    private LiveWebcamsFragment.OnListFragmentInteractionListener mListener;
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
     private CameraPosition position;
@@ -47,7 +43,7 @@ public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallb
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        adapter = new MyItemRecyclerViewAdapter3(getActivity(), null, (FavoriteWebcamsFragment.OnListFragmentInteractionListener) mListener);
+        adapter = new DiscoverWebcamsRecyclerViewAdapter(getActivity(), null, this);
     }
 
     @Override
@@ -94,23 +90,6 @@ public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallb
             }
         };
         fetchWebcams.execute("https://webcamstravel.p.mashape.com/webcams/list/nearby=37.7704433522854,-122.43026733398438,1000?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer%2Clive'");
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LiveWebcamsFragment.OnListFragmentInteractionListener) {
-            mListener = (LiveWebcamsFragment.OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -171,18 +150,12 @@ public class DiscoverWebcamsFragment extends Fragment implements OnMapReadyCallb
         });
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(String item);
+    @Override
+    public String onListItemClick(Webcam webcam) {
+        Toast.makeText(getContext(), "hello " + webcam.getId(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
+        intent.putExtra("webcam", webcam);
+        getActivity().startActivity(intent);
+        return null;
     }
 }

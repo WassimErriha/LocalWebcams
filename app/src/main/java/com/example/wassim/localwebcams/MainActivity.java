@@ -8,14 +8,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.wassim.localwebcams.Objects.Webcam;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-        implements FavoriteWebcamsFragment.OnListFragmentInteractionListener
-        , LiveWebcamsFragment.OnListFragmentInteractionListener, MyItemRecyclerViewAdapter.onListItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -39,20 +35,8 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
     }
 
-
-    @Override
-    public void onListFragmentInteraction(String item) {
-        //  Toast.makeText(this,"" + item,Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public String onListItemClick(Webcam webcam) {
-        //Toast.makeText(this,"" + webcam.getId(),Toast.LENGTH_LONG).show();
-        return null;
-    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

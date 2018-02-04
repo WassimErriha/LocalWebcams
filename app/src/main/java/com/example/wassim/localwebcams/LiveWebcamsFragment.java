@@ -14,10 +14,9 @@ import android.widget.Toast;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
 
-public class LiveWebcamsFragment extends Fragment implements MyItemRecyclerViewAdapter.onListItemClickListener {
+public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecyclerViewAdapter.onListItemClickListener {
 
-    MyItemRecyclerViewAdapter adapter;
-    private OnListFragmentInteractionListener mListener;
+    LiveWebcamsRecyclerViewAdapter adapter;
 
     public LiveWebcamsFragment() {
     }
@@ -25,7 +24,7 @@ public class LiveWebcamsFragment extends Fragment implements MyItemRecyclerViewA
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new MyItemRecyclerViewAdapter(getActivity(), null, this);
+        adapter = new LiveWebcamsRecyclerViewAdapter(getActivity(), null, this);
     }
 
     @Override
@@ -57,33 +56,11 @@ public class LiveWebcamsFragment extends Fragment implements MyItemRecyclerViewA
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public String onListItemClick(Webcam webcam) {
         Toast.makeText(getContext(), "hello " + webcam.getId(), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
         intent.putExtra("webcam", webcam);
         getActivity().startActivity(intent);
         return null;
-    }
-
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(String itemId);
     }
 }

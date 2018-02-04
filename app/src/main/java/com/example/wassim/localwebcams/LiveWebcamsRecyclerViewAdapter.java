@@ -19,13 +19,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
+public class LiveWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<LiveWebcamsRecyclerViewAdapter.ViewHolder> {
 
     private static List<Webcam> webcamList = null;
     private Context mContext;
     private onListItemClickListener mItemClickListner;
 
-    public MyItemRecyclerViewAdapter(Context context, List<Webcam> items, onListItemClickListener itemClickListener) {
+    public LiveWebcamsRecyclerViewAdapter(Context context, List<Webcam> items, onListItemClickListener itemClickListener) {
 
         if (webcamList != null) {
             webcamList.clear();
