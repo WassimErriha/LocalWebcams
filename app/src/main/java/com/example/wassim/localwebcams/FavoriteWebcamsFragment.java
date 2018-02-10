@@ -57,7 +57,13 @@ public class FavoriteWebcamsFragment extends Fragment
             }
         };
         ArrayList webcamIds = getFavoriteWebcamIds();
-        fetchWebcams.execute(RemoteDataURIBuilder.buildURLWithFavoriteWebcams(webcamIds));
+        if (webcamIds.size() > 0) {
+            fetchWebcams.execute(RemoteDataURIBuilder.buildURLWithFavoriteWebcams(webcamIds));
+        } else {
+            //TODO show emptyView
+            Toast.makeText(getContext(), "No webcams available", Toast.LENGTH_LONG).show();
+        }
+
 
     }
 

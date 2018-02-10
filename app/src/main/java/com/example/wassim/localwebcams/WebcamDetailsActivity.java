@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 public class WebcamDetailsActivity extends AppCompatActivity {
 
     long currentWebcamId;
-    private String stringCurrenrtWebcamId;
+    private String stringCurrentWebcamId;
     private Webcam webcam;
 
     public static void loadImage(Context context, String thumbnail, ImageView imageView) {
@@ -38,12 +38,21 @@ public class WebcamDetailsActivity extends AppCompatActivity {
 
         if (getIntent() != null && getIntent().hasExtra("webcam")) {
             webcam = getIntent().getExtras().getParcelable("webcam");
-            stringCurrenrtWebcamId = webcam.getId();
-            currentWebcamId = Long.parseLong(stringCurrenrtWebcamId);
+            stringCurrentWebcamId = webcam.getId();
+            currentWebcamId = Long.parseLong(stringCurrentWebcamId);
             String thumbnail = webcam.getImage().getDaylight().getThumbnail();
             loadImage(this, thumbnail, mainImageView);
+            if (webcam.getPlayer().getLive().getAvailable()) {
+                String liveWebcamLink = webcam.getPlayer().getLive().getEmbed();
+            }
             String dayTimeLapsLink = webcam.getPlayer().getLifetime().getEmbed();
-            Toast.makeText(WebcamDetailsActivity.this, "" + dayTimeLapsLink, Toast.LENGTH_LONG).show();
+            String monthTimeLapseLink = webcam.getPlayer().getMonth().getEmbed();
+            String yearTimeLapseLink = webcam.getPlayer().getYear().getEmbed();
+
+
+//            Intent i = new Intent(Intent.ACTION_VIEW);
+//            i.setData(Uri.parse(dayTimeLapsLink));
+//            startActivity(i);
         }
     }
 

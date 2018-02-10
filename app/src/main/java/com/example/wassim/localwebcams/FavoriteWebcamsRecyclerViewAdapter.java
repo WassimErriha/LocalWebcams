@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wassim.localwebcams.Objects.Location;
 import com.example.wassim.localwebcams.Objects.Response;
@@ -94,6 +95,10 @@ public class FavoriteWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Fav
             String string = response;
             Response result = gson.fromJson(response, new TypeToken<Response>() {
             }.getType());
+            if (result != null && result.getResult().getTotal() == 0) {
+                Toast.makeText(mContext, "No webcams available", Toast.LENGTH_LONG).show();
+                return;
+            }
             webcamList = new ArrayList<>();
             ArrayList<Webcam> webcams = (ArrayList<Webcam>) result.getResult().getWebcams();
             webcamList.addAll(webcams);
