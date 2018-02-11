@@ -11,7 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
 import com.example.wassim.localwebcams.data.WebcamContract;
@@ -21,7 +22,9 @@ import java.util.ArrayList;
 public class FavoriteWebcamsFragment extends Fragment
         implements FavoriteWebcamsRecyclerViewAdapter.onListItemClickListener {
 
-    FavoriteWebcamsRecyclerViewAdapter adapter;
+    private FavoriteWebcamsRecyclerViewAdapter adapter;
+    private ProgressBar progressBar;
+    private TextView emptyWebcamsArray;
 
     public FavoriteWebcamsFragment() {
     }
@@ -38,10 +41,16 @@ public class FavoriteWebcamsFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         // Set the adapter
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(false);
+
+        progressBar = view.findViewById(R.id.progressBar2);
+        progressBar.setVisibility(View.INVISIBLE);
+        emptyWebcamsArray = view.findViewById(R.id.empty_webcams_array);
+        emptyWebcamsArray.setVisibility(View.VISIBLE);
+        emptyWebcamsArray.setText("No webcams saved");
         return view;
     }
 
@@ -53,23 +62,23 @@ public class FavoriteWebcamsFragment extends Fragment
             @Override
             protected void onPostExecute(String response) {
                 adapter.swapData(response);
-                adapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         };
+
         ArrayList webcamIds = getFavoriteWebcamIds();
         if (webcamIds.size() > 0) {
             fetchWebcams.execute(RemoteDataURIBuilder.buildURLWithFavoriteWebcams(webcamIds));
+            emptyWebcamsArray.setVisibility(View.INVISIBLE);
         } else {
-            //TODO show emptyView
-            Toast.makeText(getContext(), "No webcams available", Toast.LENGTH_LONG).show();
+            emptyWebcamsArray.setVisibility(View.VISIBLE);
+            //TODO why swap data here with a null value
+            adapter.swapData(null);
         }
-
-
     }
 
     @Override
     public String onListItemClick(Webcam webcam) {
-        Toast.makeText(getContext(), "hello " + webcam.getId(), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
         intent.putExtra("webcam", webcam);
         getActivity().startActivity(intent);
@@ -93,7 +102,6 @@ public class FavoriteWebcamsFragment extends Fragment
         } finally {
             fmCursor.close();
         }
-        Toast.makeText(getContext(), "hello " + webcamIdsArray.toString(), Toast.LENGTH_LONG).show();
         return webcamIdsArray;
     }
 }

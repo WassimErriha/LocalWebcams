@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
@@ -17,6 +19,8 @@ import com.example.wassim.localwebcams.Objects.Webcam;
 public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecyclerViewAdapter.onListItemClickListener {
 
     LiveWebcamsRecyclerViewAdapter adapter;
+    private ProgressBar progressBar;
+    private TextView emptyWebcamsArray;
 
     public LiveWebcamsFragment() {
     }
@@ -33,10 +37,13 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         // Set the adapter
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(false);
+
+        progressBar = view.findViewById(R.id.progressBar2);
+        emptyWebcamsArray = view.findViewById(R.id.empty_webcams_array);
         return view;
     }
 
@@ -49,7 +56,13 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
             @Override
             protected void onPostExecute(String response) {
                 adapter.swapData(response);
-                adapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.INVISIBLE);
+
+                if (adapter.getItemCount() == 0) {
+                    emptyWebcamsArray.setVisibility(View.VISIBLE);
+                } else {
+                    emptyWebcamsArray.setVisibility(View.INVISIBLE);
+                }
             }
         };
         fetchWebcams.execute(RemoteDataURIBuilder.STATIC_LIVE_WEBCAMS_URL);

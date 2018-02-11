@@ -14,7 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -27,6 +28,8 @@ import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecyclerViewAdapter.onListItemClickListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 111;
+    private static final double DEFAULT_LOCATION_LATITUDE = 37;
+    private static final double DEFAULT_LOCATION_LONGITUDE = -122;
     NearbyWebcamsRecyclerViewAdapter adapter;
     FusedLocationProviderClient client;
     private Location mLastKnownLocation;
@@ -34,6 +37,9 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
     private double locationLat;
     private double locationLong;
     private String nearbyWebcamsUrl;
+    private ProgressBar progressBar;
+    private TextView emptyWebcamArray;
+
 
     public NearbyWebcamsFragment() {
     }
@@ -101,8 +107,8 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                             Log.d("TAG", "Current location is null. Using defaults.");
                             Log.e("TAG", "Exception: %s", task.getException());
                             //TODO set default location
-                            locationLat = 37.7704433522854;
-                            locationLong = -122.43026733398438;
+                            locationLat = DEFAULT_LOCATION_LATITUDE;
+                            locationLong = DEFAULT_LOCATION_LONGITUDE;
                         }
                         nearbyWebcamsUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(locationLat), Double.toString(locationLong));
                         @SuppressLint("StaticFieldLeak")
@@ -110,7 +116,13 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                             @Override
                             protected void onPostExecute(String response) {
                                 adapter.swapData(response);
-                                adapter.notifyDataSetChanged();
+                                progressBar.setVisibility(View.INVISIBLE);
+
+                                if (adapter.getItemCount() == 0) {
+                                    emptyWebcamArray.setVisibility(View.VISIBLE);
+                                } else {
+                                    emptyWebcamArray.setVisibility(View.INVISIBLE);
+                                }
                             }
                         };
                         fetchWebcams.execute(nearbyWebcamsUrl);
@@ -129,10 +141,13 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         // Set the adapter
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(false);
+
+        progressBar = view.findViewById(R.id.progressBar2);
+        emptyWebcamArray = view.findViewById(R.id.empty_webcams_array);
         return view;
     }
 
@@ -140,7 +155,6 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            Log.e("TAG", client + "");
             getLocationPermission();
             getLocationLatLong();
         }
@@ -148,7 +162,6 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
 
     @Override
     public String onListItemClick(Webcam webcam) {
-        Toast.makeText(getContext(), "hello " + webcam.getId(), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
         intent.putExtra("webcam", webcam);
         getActivity().startActivity(intent);

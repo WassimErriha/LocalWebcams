@@ -13,30 +13,26 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // TODO handel the no internet case
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mSectionsPagerAdapter.addFragment(new LiveWebcamsFragment(), "Live");
         mSectionsPagerAdapter.addFragment(new NearbyWebcamsFragment(), "Nearby");
         mSectionsPagerAdapter.addFragment(new DiscoverWebcamsFragment(), "Discover");
         mSectionsPagerAdapter.addFragment(new FavoriteWebcamsFragment(), "Favorites");
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        ViewPager mViewPager = findViewById(R.id.view_pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(4);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -58,15 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            //instantiateItem(new LiveWebcamsFragment(), position)
             return mFragmentList.get(position);
         }
 
         @Override
         public int getCount() {
-            // Show 4 total pages. first page is only for debugging
             return 4;
         }
 

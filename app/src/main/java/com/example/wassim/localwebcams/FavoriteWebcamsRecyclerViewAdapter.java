@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.wassim.localwebcams.Objects.Location;
 import com.example.wassim.localwebcams.Objects.Response;
@@ -24,18 +23,12 @@ public class FavoriteWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Fav
 
     private static List<Webcam> webcamList = null;
     private Context mContext;
-    private onListItemClickListener mItemClickListner;
+    private onListItemClickListener mItemClickListener;
 
     public FavoriteWebcamsRecyclerViewAdapter(Context context, List<Webcam> items, onListItemClickListener itemClickListener) {
-
-        if (webcamList != null) {
-            webcamList.clear();
-            webcamList = null;
-        }
-
         mContext = context;
         webcamList = items;
-        mItemClickListner = itemClickListener;
+        mItemClickListener = itemClickListener;
     }
 
     @Override
@@ -47,7 +40,6 @@ public class FavoriteWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Fav
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        int ithemcount = getItemCount();
         final Webcam webcam = webcamList.get(position);
         String title = webcam.getTitle();
         holder.mTitleTextView.setText(title);
@@ -56,8 +48,6 @@ public class FavoriteWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Fav
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.mImageView);
-        //Statistics statistics = webcam.getStatistics();
-        //int views = statistics.getViews();
         Location location = webcam.getLocation();
         if (location != null) {
             String city = location.getCity();
@@ -70,16 +60,14 @@ public class FavoriteWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Fav
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemClickListner.onListItemClick(webcam);
+                mItemClickListener.onListItemClick(webcam);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        if (webcamList == null) {
-            return 0;
-        }
+        if (webcamList == null) return 0;
         return webcamList.size();
     }
 
@@ -92,19 +80,13 @@ public class FavoriteWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Fav
         final Gson gson = gsonBuilder.create();
 
         if (response != null) {
-            String string = response;
             Response result = gson.fromJson(response, new TypeToken<Response>() {
             }.getType());
-            if (result != null && result.getResult().getTotal() == 0) {
-                Toast.makeText(mContext, "No webcams available", Toast.LENGTH_LONG).show();
-                return;
-            }
             webcamList = new ArrayList<>();
             ArrayList<Webcam> webcams = (ArrayList<Webcam>) result.getResult().getWebcams();
             webcamList.addAll(webcams);
         }
         notifyDataSetChanged();
-        notifyItemRangeChanged(0, webcamList.size());
     }
 
     public interface onListItemClickListener {
@@ -112,26 +94,19 @@ public class FavoriteWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Fav
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mImageView;
-        public final TextView mTitleTextView;
-        public final TextView mLocationTextView;
-        public final TextView test;
+        private final View mView;
+        private final ImageView mImageView;
+        private final TextView mTitleTextView;
+        private final TextView mLocationTextView;
 
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mImageView = (ImageView) view.findViewById(R.id.item_imageView);
-            mTitleTextView = (TextView) view.findViewById(R.id.title_tv);
-            mLocationTextView = (TextView) view.findViewById(R.id.location_tv);
-            test = (TextView) view.findViewById(R.id.test);
+            mImageView = view.findViewById(R.id.item_imageView);
+            mTitleTextView = view.findViewById(R.id.title_tv);
+            mLocationTextView = view.findViewById(R.id.location_tv);
 
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mLocationTextView.getText() + "'";
         }
     }
 }

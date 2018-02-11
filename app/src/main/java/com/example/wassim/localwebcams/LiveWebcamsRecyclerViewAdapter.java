@@ -23,18 +23,12 @@ public class LiveWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<LiveWeb
 
     private static List<Webcam> webcamList = null;
     private Context mContext;
-    private onListItemClickListener mItemClickListner;
+    private onListItemClickListener mItemClickListener;
 
     public LiveWebcamsRecyclerViewAdapter(Context context, List<Webcam> items, onListItemClickListener itemClickListener) {
-
-        if (webcamList != null) {
-            webcamList.clear();
-            webcamList = null;
-        }
-
         mContext = context;
         webcamList = items;
-        mItemClickListner = itemClickListener;
+        mItemClickListener = itemClickListener;
     }
 
     @Override
@@ -46,7 +40,6 @@ public class LiveWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<LiveWeb
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        int ithemcount = getItemCount();
         final Webcam webcam = webcamList.get(position);
         String title = webcam.getTitle();
         holder.mTitleTextView.setText(title);
@@ -55,8 +48,6 @@ public class LiveWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<LiveWeb
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.mImageView);
-        //Statistics statistics = webcam.getStatistics();
-        //int views = statistics.getViews();
         Location location = webcam.getLocation();
         if (location != null) {
             String city = location.getCity();
@@ -69,16 +60,14 @@ public class LiveWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<LiveWeb
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemClickListner.onListItemClick(webcam);
+                mItemClickListener.onListItemClick(webcam);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        if (webcamList == null) {
-            return 0;
-        }
+        if (webcamList == null) return 0;
         return webcamList.size();
     }
 
@@ -91,7 +80,6 @@ public class LiveWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<LiveWeb
         final Gson gson = gsonBuilder.create();
 
         if (response != null) {
-            String string = response;
             Response result = gson.fromJson(response, new TypeToken<Response>() {
             }.getType());
             webcamList = new ArrayList<>();
@@ -99,7 +87,6 @@ public class LiveWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<LiveWeb
             webcamList.addAll(webcams);
         }
         notifyDataSetChanged();
-        notifyItemRangeChanged(0, webcamList.size());
     }
 
     public interface onListItemClickListener {
@@ -107,26 +94,19 @@ public class LiveWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<LiveWeb
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final ImageView mImageView;
-        public final TextView mTitleTextView;
-        public final TextView mLocationTextView;
-        public final TextView test;
+        private final View mView;
+        private final ImageView mImageView;
+        private final TextView mTitleTextView;
+        private final TextView mLocationTextView;
 
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mImageView = (ImageView) view.findViewById(R.id.item_imageView);
-            mTitleTextView = (TextView) view.findViewById(R.id.title_tv);
-            mLocationTextView = (TextView) view.findViewById(R.id.location_tv);
-            test = (TextView) view.findViewById(R.id.test);
+            mImageView = view.findViewById(R.id.item_imageView);
+            mTitleTextView = view.findViewById(R.id.title_tv);
+            mLocationTextView = view.findViewById(R.id.location_tv);
 
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mLocationTextView.getText() + "'";
         }
     }
 }

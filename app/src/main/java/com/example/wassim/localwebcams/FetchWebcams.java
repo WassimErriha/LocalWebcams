@@ -21,7 +21,6 @@ class FetchWebcams extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... strings) {
         String response = "";
         try {
-            //"https://webcamstravel.p.mashape.com/webcams/list/continent=NA?lang=en&show=webcams%3Aimage%2Clocation%2Clive%2Cstatistics%2Curl%2Cuser"
             response = run(strings[0]);
         } catch (IOException e) {
             e.printStackTrace();

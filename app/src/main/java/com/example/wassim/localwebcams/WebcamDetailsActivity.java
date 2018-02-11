@@ -77,14 +77,12 @@ public class WebcamDetailsActivity extends AppCompatActivity {
         ContentValues contentValues = new ContentValues();
         contentValues.put(WebcamContract.WebcamEntry.COLUMN_WEBCAM_ID, currentWebcamId);
         Uri uriOfWebcamInserted = getContentResolver().insert(WebcamContract.WebcamEntry.CONTENT_URI, contentValues);
-        Toast.makeText(WebcamDetailsActivity.this
-                , "inserted " + uriOfWebcamInserted, Toast.LENGTH_LONG).show();
+        Toast.makeText(WebcamDetailsActivity.this, "inserted " + uriOfWebcamInserted, Toast.LENGTH_LONG).show();
     }
 
     private void deleteWebcam() {
         Uri singleWebcamUri = ContentUris.withAppendedId(WebcamContract.WebcamEntry.CONTENT_URI, currentWebcamId);
-        int numberOfRowsDeleted = getContentResolver().delete(
-                singleWebcamUri, null, null);
+        int numberOfRowsDeleted = getContentResolver().delete(singleWebcamUri, null, null);
         Toast.makeText(WebcamDetailsActivity.this, "Deleted " + numberOfRowsDeleted, Toast.LENGTH_LONG).show();
     }
 

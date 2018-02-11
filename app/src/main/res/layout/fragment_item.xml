@@ -37,14 +37,4 @@
         app:layout_constraintTop_toBottomOf="@+id/title_tv"
         tools:text="Location" />
 
-    <TextView
-        android:id="@+id/test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/item_imageView"
-        app:layout_constraintTop_toBottomOf="@+id/location_tv"
-        tools:ignore="MissingConstraints"
-        tools:text="Test" />
 </android.support.constraint.ConstraintLayout>
