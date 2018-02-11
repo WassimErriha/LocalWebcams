@@ -22,8 +22,7 @@ public class DiscoverWebcamsFragment extends Fragment
 
     private static final double DEFAULT_LOCATION_LATITUDE = 37;
     private static final double DEFAULT_LOCATION_LONGITUDE = -122;
-    DiscoverWebcamsRecyclerViewAdapter adapter;
-    MapDialogFragment mapDialogFragment;
+    public DiscoverWebcamsRecyclerViewAdapter adapter;
 
     public DiscoverWebcamsFragment() {
     }
@@ -31,7 +30,6 @@ public class DiscoverWebcamsFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //mapDialogFragment =   new MapDialogFragment();
         adapter = new DiscoverWebcamsRecyclerViewAdapter(getActivity(), null, this);
     }
 
@@ -44,8 +42,6 @@ public class DiscoverWebcamsFragment extends Fragment
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mapDialogFragment.show(getActivity().getSupportFragmentManager(), "maps_dialogue_fragment");
-                //mapDialogFragment.setRetainInstance(true);
                 showDialog();
             }
         });
@@ -79,9 +75,7 @@ public class DiscoverWebcamsFragment extends Fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Fragment prev1 = getActivity().getSupportFragmentManager().findFragmentByTag("maps_dialogue_fragment");
         Fragment prev = getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
-
 
         if (prev != null) {
             ft.remove(prev);
@@ -89,9 +83,10 @@ public class DiscoverWebcamsFragment extends Fragment
 
         // Create and show the dialog.
         MapDialogFragment newFragment = new MapDialogFragment();
+        newFragment.setTargetFragment(this, 1);
         newFragment.show(ft, "maps_dialogue_fragment");
-    }
 
+    }
 
     @Override
     public String onListItemClick(Webcam webcam) {
@@ -100,5 +95,28 @@ public class DiscoverWebcamsFragment extends Fragment
         intent.putExtra("webcam", webcam);
         getActivity().startActivity(intent);
         return null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == 1) {
+            if (data.hasExtra("lat_long_url")) {
+                String latLongUrl = data.getStringExtra("lat_long_url");
+                Toast.makeText(getContext(), "Test latlongUrl  = " + latLongUrl, Toast.LENGTH_LONG).show();
+
+
+                @SuppressLint("StaticFieldLeak")
+                FetchWebcams fetchWebcams = new FetchWebcams() {
+                    @Override
+                    protected void onPostExecute(String response) {
+                        adapter.swapData(response);
+                        adapter.notifyDataSetChanged();
+
+                    }
+                };
+                fetchWebcams.execute(latLongUrl);
+            }
+        }
     }
 }

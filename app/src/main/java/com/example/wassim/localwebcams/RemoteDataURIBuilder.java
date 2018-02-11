@@ -21,7 +21,7 @@ public class RemoteDataURIBuilder {
     public static String buildURLWithLatLong(String locationLatitude, String locationLongitude) {
 
         final String LOCATION_RADIUS = "1000";
-        if (locationLatitude == null || locationLatitude == null) {
+        if (locationLatitude == null || locationLongitude == null) {
             locationLatitude = "37";
             locationLongitude = "-122";
         }

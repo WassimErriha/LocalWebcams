@@ -3,12 +3,15 @@ package com.example.wassim.localwebcams;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -42,18 +45,47 @@ public class WebcamDetailsActivity extends AppCompatActivity {
             currentWebcamId = Long.parseLong(stringCurrentWebcamId);
             String thumbnail = webcam.getImage().getDaylight().getThumbnail();
             loadImage(this, thumbnail, mainImageView);
-            if (webcam.getPlayer().getLive().getAvailable()) {
-                String liveWebcamLink = webcam.getPlayer().getLive().getEmbed();
-            }
-            String dayTimeLapsLink = webcam.getPlayer().getLifetime().getEmbed();
-            String monthTimeLapseLink = webcam.getPlayer().getMonth().getEmbed();
-            String yearTimeLapseLink = webcam.getPlayer().getYear().getEmbed();
-
-
-//            Intent i = new Intent(Intent.ACTION_VIEW);
-//            i.setData(Uri.parse(dayTimeLapsLink));
-//            startActivity(i);
         }
+    }
+
+    public void viewLink(View view) {
+        String webcamLink = "";
+        switch (view.getId()) {
+            case R.id.live_textview:
+                webcamLink = webcam.getPlayer().getLive().getEmbed();
+                break;
+            case R.id.day_timelapse_textview:
+                webcamLink = webcam.getPlayer().getDay().getEmbed();
+                break;
+            case R.id.month_timelapse_textview:
+                webcamLink = webcam.getPlayer().getMonth().getEmbed();
+                break;
+            case R.id.year_timelapse_textview:
+                webcamLink = webcam.getPlayer().getYear().getEmbed();
+                break;
+        }
+        if (webcamLink != null && !TextUtils.isEmpty(webcamLink)) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(webcamLink));
+            startActivity(i);
+        } else {
+            Toast.makeText(this, "No link found for this selection", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void saveWebcam() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(WebcamContract.WebcamEntry.COLUMN_WEBCAM_ID, currentWebcamId);
+        Uri uriOfWebcamInserted = getContentResolver().insert(WebcamContract.WebcamEntry.CONTENT_URI, contentValues);
+        Toast.makeText(WebcamDetailsActivity.this
+                , "inserted " + uriOfWebcamInserted, Toast.LENGTH_LONG).show();
+    }
+
+    private void deleteWebcam() {
+        Uri singleWebcamUri = ContentUris.withAppendedId(WebcamContract.WebcamEntry.CONTENT_URI, currentWebcamId);
+        int numberOfRowsDeleted = getContentResolver().delete(
+                singleWebcamUri, null, null);
+        Toast.makeText(WebcamDetailsActivity.this, "Deleted " + numberOfRowsDeleted, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -76,20 +108,5 @@ public class WebcamDetailsActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void saveWebcam() {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(WebcamContract.WebcamEntry.COLUMN_WEBCAM_ID, currentWebcamId);
-        Uri uriOfWebcamInserted = getContentResolver().insert(WebcamContract.WebcamEntry.CONTENT_URI, contentValues);
-        Toast.makeText(WebcamDetailsActivity.this
-                , "inserted " + uriOfWebcamInserted, Toast.LENGTH_LONG).show();
-    }
-
-    private void deleteWebcam() {
-        Uri singleWebcamUri = ContentUris.withAppendedId(WebcamContract.WebcamEntry.CONTENT_URI, currentWebcamId);
-        int numberOfRowsDeleted = getContentResolver().delete(
-                singleWebcamUri, null, null);
-        Toast.makeText(WebcamDetailsActivity.this, "Deleted " + numberOfRowsDeleted, Toast.LENGTH_LONG).show();
     }
 }

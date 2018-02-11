@@ -15,4 +15,5 @@
         tools:context="com.example.wassim.localwebcams.FavoriteWebcamsFragment"
         tools:listitem="@layout/fragment_item" />
 
+    <!--TODO  add loading indicators and error images -->
 </FrameLayout>

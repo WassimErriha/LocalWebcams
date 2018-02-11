@@ -1,6 +1,6 @@
 package com.example.wassim.localwebcams;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -25,6 +25,7 @@ public class MapDialogFragment extends DialogFragment implements OnMapReadyCallb
     GoogleMap mMap;
     SupportMapFragment mapFragment;
     private CameraPosition position;
+    private DiscoverWebcamsRecyclerViewAdapter adapter;
 
     public MapDialogFragment() {
         // Required empty public constructor
@@ -33,9 +34,7 @@ public class MapDialogFragment extends DialogFragment implements OnMapReadyCallb
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setRetainInstance(true);
-
-
+        adapter = new DiscoverWebcamsRecyclerViewAdapter(getActivity(), null, null);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class MapDialogFragment extends DialogFragment implements OnMapReadyCallb
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
 
-        //        LatLng latLng = new LatLng(37.7688472,-122.4130859);
+        //        new LatLng(37.7688472,-122.4130859);
         LatLng sydney = new LatLng(-34, 151);
         final Marker marker = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
@@ -78,17 +77,15 @@ public class MapDialogFragment extends DialogFragment implements OnMapReadyCallb
                 Log.e(" Tag2", " " + position.toString());
                 Toast.makeText(getContext(), point.toString(), Toast.LENGTH_SHORT).show();
 
-                @SuppressLint("StaticFieldLeak")
-                FetchWebcams fetchWebcams = new FetchWebcams() {
-                    @Override
-                    protected void onPostExecute(String response) {
-//                        adapter.swapData(response);
-//                        adapter.notifyDataSetChanged();
-                    }
-                };
-                String discoverWebcamsUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(point.latitude), Double.toString(point.longitude));
-                fetchWebcams.execute(discoverWebcamsUrl);
+                String mapsWebcamUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(point.latitude), Double.toString(point.longitude));
+                sendResult(1, mapsWebcamUrl);
             }
         });
+    }
+
+    private void sendResult(int REQUEST_CODE, String latLongUrl) {
+        Intent intent = new Intent();
+        intent.putExtra("lat_long_url", latLongUrl);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
     }
 }

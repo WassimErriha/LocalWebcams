@@ -62,6 +62,8 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                     getLocationLatLong();
                 }
             }
+
+            // TODO handel the case when user denies location permission
         }
     }
 
@@ -88,7 +90,8 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
-                            if (task != null) {
+                            //if (task != null) {
+                            if (task.isComplete()) {
                                 mLastKnownLocation = task.getResult();
                                 locationLat = mLastKnownLocation.getLatitude();
                                 locationLong = mLastKnownLocation.getLongitude();
