@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
+
+import com.example.wassim.localwebcams.Utils.ConnectivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,20 +21,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO handel the no internet case
 
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mSectionsPagerAdapter.addFragment(new LiveWebcamsFragment(), "Live");
-        mSectionsPagerAdapter.addFragment(new NearbyWebcamsFragment(), "Nearby");
-        mSectionsPagerAdapter.addFragment(new DiscoverWebcamsFragment(), "Discover");
-        mSectionsPagerAdapter.addFragment(new FavoriteWebcamsFragment(), "Favorites");
+        //TODO App is equipped with a signing configuration, and the keystore and passwords are included in the repository. Keystore is referred to by a relative path.
 
-        // Set up the ViewPager with the sections adapter.
-        ViewPager mViewPager = findViewById(R.id.view_pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        // TODO App provides a widget to provide relevant information to the user on the home screen.
+
+
+        //design
+        // TODO App uses standard and simple transitions between activities.
+        // TODO  App includes support for accessibility. That includes content descriptions, navigation using a D-pad, and, if applicable, non-audio versions of audio cues.
+        // TODO App keeps all strings in a strings.xml file and enables RTL layout switching on all layouts.
+
+
+        if (ConnectivityUtils.isNetworkAvailable(this)) {
+            SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+            mSectionsPagerAdapter.addFragment(new LiveWebcamsFragment(), "Live");
+            mSectionsPagerAdapter.addFragment(new NearbyWebcamsFragment(), "Nearby");
+            mSectionsPagerAdapter.addFragment(new DiscoverWebcamsFragment(), "Discover");
+            mSectionsPagerAdapter.addFragment(new FavoriteWebcamsFragment(), "Favorites");
+
+            // Set up the ViewPager with the sections adapter.
+            ViewPager mViewPager = findViewById(R.id.view_pager);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+
+            TabLayout tabLayout = findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(mViewPager);
+        } else {
+            Toast.makeText(this, "No network available", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**

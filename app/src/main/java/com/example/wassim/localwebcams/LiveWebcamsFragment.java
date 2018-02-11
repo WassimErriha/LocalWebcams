@@ -52,7 +52,7 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
         super.onResume();
 
         @SuppressLint("StaticFieldLeak")
-        FetchWebcams fetchWebcams = new FetchWebcams() {
+        FetchWebcams fetchWebcams = new FetchWebcams(getContext()) {
             @Override
             protected void onPostExecute(String response) {
                 adapter.swapData(response);

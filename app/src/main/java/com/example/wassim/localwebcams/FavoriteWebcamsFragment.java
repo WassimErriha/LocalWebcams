@@ -58,7 +58,7 @@ public class FavoriteWebcamsFragment extends Fragment
     public void onResume() {
         super.onResume();
         @SuppressLint("StaticFieldLeak")
-        FetchWebcams fetchWebcams = new FetchWebcams() {
+        FetchWebcams fetchWebcams = new FetchWebcams(getContext()) {
             @Override
             protected void onPostExecute(String response) {
                 adapter.swapData(response);

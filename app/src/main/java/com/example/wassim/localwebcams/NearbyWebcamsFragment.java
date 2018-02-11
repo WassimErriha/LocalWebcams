@@ -112,7 +112,7 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                         }
                         nearbyWebcamsUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(locationLat), Double.toString(locationLong));
                         @SuppressLint("StaticFieldLeak")
-                        FetchWebcams fetchWebcams = new FetchWebcams() {
+                        FetchWebcams fetchWebcams = new FetchWebcams(getContext()) {
                             @Override
                             protected void onPostExecute(String response) {
                                 adapter.swapData(response);
