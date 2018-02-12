@@ -64,10 +64,7 @@ public class RemoteDataURIBuilder {
     }
 
     private static String concatenateFavoriteWebcams(ArrayList webcamIds) {
-
         StringBuilder concatenatedWebcamIds = new StringBuilder();
-
-
         for (int i = 0; i < webcamIds.size(); i++) {
             if (i > 0) {
                 concatenatedWebcamIds.append("%2C");
@@ -77,4 +74,22 @@ public class RemoteDataURIBuilder {
         return concatenatedWebcamIds.toString();
     }
 
+
+    public static String BuildContinentUrl(String continent) {
+        String concatenatedPath = "continent=" + continent;
+
+        Uri.Builder uri = Uri.parse(BASE_URL).buildUpon()
+                .appendEncodedPath(concatenatedPath)
+                .appendQueryParameter(LANGUAGE_QUERY_PARAM, LANGUAGE_QUERY_VALUE)
+                .appendQueryParameter(SHOW_QUERY_PARAM, SHOW_QUERY_CONCATENATED_VALUE);
+        uri.build();
+        URL url = null;
+        try {
+            url = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, uri.toString());
+        return url.toString();
+    }
 }

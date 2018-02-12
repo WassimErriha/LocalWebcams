@@ -32,12 +32,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WebcamDetailsActivity"></activity>
+        <activity android:name=".WebcamDetailsActivity" />
 
         <provider
             android:name=".data.WebcamProvider"
             android:authorities="com.example.wassim.localwebcams"
             android:exported="false" />
+
+        <receiver android:name=".WorldWebcamsWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/world_webcams_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".WidgetRemoteViewsService"
+            android:enabled="true"
+            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
+
+        <activity android:name=".WidgetDetailsActivity"></activity>
     </application>
 
 </manifest>

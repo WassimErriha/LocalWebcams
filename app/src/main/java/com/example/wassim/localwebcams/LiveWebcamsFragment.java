@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
 
@@ -21,6 +20,7 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
     LiveWebcamsRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private TextView emptyWebcamsArray;
+    private String webcamsUrl;
 
     public LiveWebcamsFragment() {
     }
@@ -28,6 +28,13 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        if (getArguments() != null && getArguments().containsKey("continent_webcams_url")) {
+            webcamsUrl = getArguments().getString("continent_webcams_url");
+        } else {
+            webcamsUrl = RemoteDataURIBuilder.STATIC_LIVE_WEBCAMS_URL;
+        }
         adapter = new LiveWebcamsRecyclerViewAdapter(getActivity(), null, this);
     }
 
@@ -65,12 +72,11 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
                 }
             }
         };
-        fetchWebcams.execute(RemoteDataURIBuilder.STATIC_LIVE_WEBCAMS_URL);
+        fetchWebcams.execute(webcamsUrl);
     }
 
     @Override
     public String onListItemClick(Webcam webcam) {
-        Toast.makeText(getContext(), "hello " + webcam.getId(), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
         intent.putExtra("webcam", webcam);
         getActivity().startActivity(intent);

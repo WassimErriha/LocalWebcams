@@ -21,18 +21,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        //TODO App is equipped with a signing configuration, and the keystore and passwords are included in the repository. Keystore is referred to by a relative path.
-
-
-        // TODO App provides a widget to provide relevant information to the user on the home screen.
-
-
         //design
-        // TODO App uses standard and simple transitions between activities.
         // TODO  App includes support for accessibility. That includes content descriptions, navigation using a D-pad, and, if applicable, non-audio versions of audio cues.
         // TODO App keeps all strings in a strings.xml file and enables RTL layout switching on all layouts.
-
+        // TODO App uses standard and simple transitions between activities.
 
         if (ConnectivityUtils.isNetworkAvailable(this)) {
             SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
