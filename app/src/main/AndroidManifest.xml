@@ -17,10 +17,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDewyfj5xxJdrmqW63_zAws4Zu4_WRvWMI" />
 
-        <!-- <meta-data -->
-        <!-- android:name="com.google.android.geo.API_KEY" -->
-        <!-- android:value="AIzaSyAzjHlTSr0G1RRMFER12O-K9tdHxxmKr50" /> -->
-
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -54,7 +50,9 @@
             android:enabled="true"
             android:permission="android.permission.BIND_REMOTEVIEWS"></service>
 
-        <activity android:name=".WidgetDetailsActivity"></activity>
+        <activity android:name=".WidgetDetailsActivity">
+
+        </activity>
     </application>
 
 </manifest>

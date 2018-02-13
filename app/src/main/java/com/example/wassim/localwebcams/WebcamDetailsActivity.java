@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
 import com.example.wassim.localwebcams.data.WebcamContract;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 public class WebcamDetailsActivity extends AppCompatActivity {
@@ -25,11 +27,21 @@ public class WebcamDetailsActivity extends AppCompatActivity {
     private String stringCurrentWebcamId;
     private Webcam webcam;
 
-    public static void loadImage(Context context, String thumbnail, ImageView imageView) {
+    public void loadImage(Context context, String thumbnail, ImageView imageView) {
+
+
         Picasso.with(context).load(thumbnail).fit().centerCrop()
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .error(R.drawable.ic_launcher_foreground)
-                .into(imageView);
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        supportStartPostponedEnterTransition();
+                    }
+
+                    @Override
+                    public void onError() {
+                        supportStartPostponedEnterTransition();
+                    }
+                });
     }
 
     @Override
@@ -45,6 +57,12 @@ public class WebcamDetailsActivity extends AppCompatActivity {
             currentWebcamId = Long.parseLong(stringCurrentWebcamId);
             String thumbnail = webcam.getImage().getDaylight().getThumbnail();
             loadImage(this, thumbnail, mainImageView);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                String imageTransitionName = getIntent().getExtras().getString("EXTRA_ANIMAL_IMAGE_TRANSITION_NAME");
+                mainImageView.setTransitionName(imageTransitionName);
+            }
+
         }
     }
 

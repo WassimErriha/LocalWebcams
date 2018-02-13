@@ -7,4 +7,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="watch_month_timelapse">Watch Month TimeLapse</string>
+    <string name="watch_year_timelapse">Watch Year TimeLapse</string>
+    <string name="watch_day_timelapse">Watch Day TimeLapse</string>
+    <string name="watch_live_webcam">Watch live Webcam</string>
+    <string name="no_webcams_found_for_this_area">NO WEBCAMS FOUND FOR THIS AREA</string>
+    <string name="shared_transition_name">webcam_image_shared_transition</string>
 </resources>

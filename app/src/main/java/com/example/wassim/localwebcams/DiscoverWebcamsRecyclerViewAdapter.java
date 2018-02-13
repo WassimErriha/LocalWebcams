@@ -1,6 +1,7 @@
 package com.example.wassim.localwebcams;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,9 @@ public class DiscoverWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Dis
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.mImageView);
+
+        ViewCompat.setTransitionName(holder.mImageView, "webcam_image_shared_transition");
+
         Location location = webcam.getLocation();
         if (location != null) {
             String city = location.getCity();
@@ -60,7 +64,7 @@ public class DiscoverWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Dis
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemClickListener.onListItemClick(webcam);
+                mItemClickListener.onListItemClick(webcam, holder.mImageView);
             }
         });
     }
@@ -90,7 +94,7 @@ public class DiscoverWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Dis
     }
 
     public interface onListItemClickListener {
-        String onListItemClick(Webcam webcam);
+        String onListItemClick(Webcam webcam, ImageView sharedImageView);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

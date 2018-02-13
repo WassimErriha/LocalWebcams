@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,6 +55,7 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(false);
 
+
         progressBar = view.findViewById(R.id.progressBar1);
         emptyWebcamsArray = view.findViewById(R.id.empty_webcams_array1);
 
@@ -82,10 +85,14 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
     }
 
     @Override
-    public String onListItemClick(Webcam webcam) {
+    public String onListItemClick(Webcam webcam, ImageView sharedImageView) {
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
         intent.putExtra("webcam", webcam);
-        getActivity().startActivity(intent);
+        //getActivity().startActivity(intent);
+        intent.putExtra("EXTRA_ANIMAL_IMAGE_TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView));
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this.getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
+        startActivity(intent, options.toBundle());
         return null;
     }
 
