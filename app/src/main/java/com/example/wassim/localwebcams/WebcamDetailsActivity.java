@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 
 public class WebcamDetailsActivity extends AppCompatActivity {
 
+    private static final String IMAGE_TRANSITION_NAME = "image_transition_name";
     long currentWebcamId;
     private String stringCurrentWebcamId;
     private Webcam webcam;
@@ -31,6 +32,7 @@ public class WebcamDetailsActivity extends AppCompatActivity {
 
 
         Picasso.with(context).load(thumbnail).fit().centerCrop()
+                .noFade()
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -58,8 +60,9 @@ public class WebcamDetailsActivity extends AppCompatActivity {
             String thumbnail = webcam.getImage().getDaylight().getThumbnail();
             loadImage(this, thumbnail, mainImageView);
 
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                String imageTransitionName = getIntent().getExtras().getString("EXTRA_ANIMAL_IMAGE_TRANSITION_NAME");
+                String imageTransitionName = getIntent().getExtras().getString(IMAGE_TRANSITION_NAME);
                 mainImageView.setTransitionName(imageTransitionName);
             }
 

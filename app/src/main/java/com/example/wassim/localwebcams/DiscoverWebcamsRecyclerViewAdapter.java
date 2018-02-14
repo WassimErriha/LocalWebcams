@@ -46,11 +46,12 @@ public class DiscoverWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Dis
         holder.mTitleTextView.setText(title);
         String imageLink = webcam.getImage().getDaylight().getThumbnail();
         Picasso.with(mContext).load(imageLink).fit().centerCrop()
+                .noFade()
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.mImageView);
 
-        ViewCompat.setTransitionName(holder.mImageView, "webcam_image_shared_transition");
+        ViewCompat.setTransitionName(holder.mImageView, mContext.getString(R.string.shared_transition_name));
 
         Location location = webcam.getLocation();
         if (location != null) {

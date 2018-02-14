@@ -7,13 +7,16 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,6 +33,7 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 111;
     private static final double DEFAULT_LOCATION_LATITUDE = 37;
     private static final double DEFAULT_LOCATION_LONGITUDE = -122;
+    private static final String IMAGE_TRANSITION_NAME = "image_transition_name";
     NearbyWebcamsRecyclerViewAdapter adapter;
     FusedLocationProviderClient client;
     private Location mLastKnownLocation;
@@ -161,10 +165,12 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
     }
 
     @Override
-    public String onListItemClick(Webcam webcam) {
+    public String onListItemClick(Webcam webcam, ImageView sharedImageView) {
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
         intent.putExtra("webcam", webcam);
-        getActivity().startActivity(intent);
+        intent.putExtra(IMAGE_TRANSITION_NAME, getString(R.string.shared_transition_name));
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this.getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
+        startActivity(intent, options.toBundle());
         return null;
     }
 }

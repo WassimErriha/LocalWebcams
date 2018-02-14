@@ -2,6 +2,7 @@ package com.example.wassim.localwebcams;
 
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,9 +47,13 @@ public class NearbyWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Nearb
         holder.mTitleTextView.setText(title);
         String imageLink = webcam.getImage().getDaylight().getThumbnail();
         Picasso.with(mContext).load(imageLink).fit().centerCrop()
+                .noFade()
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.mImageView);
+
+        ViewCompat.setTransitionName(holder.mImageView, mContext.getString(R.string.shared_transition_name));
+
         Location location = webcam.getLocation();
         if (location != null) {
             String city = location.getCity();
@@ -61,7 +66,7 @@ public class NearbyWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Nearb
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemClickListener.onListItemClick(webcam);
+                mItemClickListener.onListItemClick(webcam, holder.mImageView);
             }
         });
     }
@@ -91,7 +96,7 @@ public class NearbyWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Nearb
     }
 
     public interface onListItemClickListener {
-        String onListItemClick(Webcam webcam);
+        String onListItemClick(Webcam webcam, ImageView sharedImageView);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -100,12 +105,14 @@ public class NearbyWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Nearb
         private final TextView mTitleTextView;
         private final TextView mLocationTextView;
 
+
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mImageView = view.findViewById(R.id.item_imageView);
             mTitleTextView = view.findViewById(R.id.title_tv);
             mLocationTextView = view.findViewById(R.id.location_tv);
+
         }
     }
 }

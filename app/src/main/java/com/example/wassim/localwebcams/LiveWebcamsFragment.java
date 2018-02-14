@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,6 +20,7 @@ import com.example.wassim.localwebcams.Objects.Webcam;
 
 public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecyclerViewAdapter.onListItemClickListener {
 
+    private static final String IMAGE_TRANSITION_NAME = "image_transition_name";
     LiveWebcamsRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private TextView emptyWebcamsArray;
@@ -76,10 +80,12 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
     }
 
     @Override
-    public String onListItemClick(Webcam webcam) {
+    public String onListItemClick(Webcam webcam, ImageView sharedImageView) {
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
         intent.putExtra("webcam", webcam);
-        getActivity().startActivity(intent);
+        intent.putExtra(IMAGE_TRANSITION_NAME, getString(R.string.shared_transition_name));
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this.getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
+        startActivity(intent, options.toBundle());
         return null;
     }
 }

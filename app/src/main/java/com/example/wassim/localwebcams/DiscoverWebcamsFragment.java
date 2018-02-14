@@ -24,6 +24,7 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
 
     private static final double DEFAULT_LOCATION_LATITUDE = 37;
     private static final double DEFAULT_LOCATION_LONGITUDE = -122;
+    private static final String IMAGE_TRANSITION_NAME = "image_transition_name";
     public DiscoverWebcamsRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private TextView emptyWebcamsArray;
@@ -54,7 +55,6 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(false);
-
 
         progressBar = view.findViewById(R.id.progressBar1);
         emptyWebcamsArray = view.findViewById(R.id.empty_webcams_array1);
@@ -88,10 +88,8 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
     public String onListItemClick(Webcam webcam, ImageView sharedImageView) {
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
         intent.putExtra("webcam", webcam);
-        //getActivity().startActivity(intent);
-        intent.putExtra("EXTRA_ANIMAL_IMAGE_TRANSITION_NAME", ViewCompat.getTransitionName(sharedImageView));
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(this.getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
+        intent.putExtra(IMAGE_TRANSITION_NAME, getString(R.string.shared_transition_name));
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this.getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
         startActivity(intent, options.toBundle());
         return null;
     }
