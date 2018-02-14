@@ -27,8 +27,6 @@ public class WorldWebcamsWidgetProvider extends AppWidgetProvider {
         remoteView.setPendingIntentTemplate(R.id.widget_list_view, pendingIntent);
 
         return remoteView;
-
-
     }
 
     @Override

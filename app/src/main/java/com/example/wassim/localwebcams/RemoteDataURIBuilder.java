@@ -75,8 +75,8 @@ public class RemoteDataURIBuilder {
     }
 
 
-    public static String BuildContinentUrl(String continent) {
-        String concatenatedPath = "continent=" + continent;
+    public static String BuildContinentUrl(String continentISCode) {
+        String concatenatedPath = "continent=" + continentISCode;
 
         Uri.Builder uri = Uri.parse(BASE_URL).buildUpon()
                 .appendEncodedPath(concatenatedPath)

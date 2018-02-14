@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         //design
         // TODO  App includes support for accessibility. That includes content descriptions, navigation using a D-pad, and, if applicable, non-audio versions of audio cues.
         // TODO App keeps all strings in a strings.xml file and enables RTL layout switching on all layouts.
-        // TODO App uses standard and simple transitions between activities.
 
         if (ConnectivityUtils.isNetworkAvailable(this)) {
             SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
