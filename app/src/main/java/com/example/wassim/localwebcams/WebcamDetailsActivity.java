@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
@@ -51,6 +52,8 @@ public class WebcamDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webcam_details);
 
+        TextView webcamTitleTV = findViewById(R.id.webcam_title_tv);
+
         ImageView mainImageView = findViewById(R.id.webcam_main_image);
 
         if (getIntent() != null && getIntent().hasExtra("webcam")) {
@@ -59,6 +62,7 @@ public class WebcamDetailsActivity extends AppCompatActivity {
             currentWebcamId = Long.parseLong(stringCurrentWebcamId);
             String thumbnail = webcam.getImage().getDaylight().getThumbnail();
             loadImage(this, thumbnail, mainImageView);
+            webcamTitleTV.setText(webcam.getTitle());
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

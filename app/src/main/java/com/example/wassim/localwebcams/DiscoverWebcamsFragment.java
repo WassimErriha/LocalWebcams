@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -43,8 +44,8 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_item_list_with_map, container, false);
         final Context context = view.getContext();
-        ImageView imageView = view.findViewById(R.id.get_location_view);
-        imageView.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = view.findViewById(R.id.get_location_view);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDialog();

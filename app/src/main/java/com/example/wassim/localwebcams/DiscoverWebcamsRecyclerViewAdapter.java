@@ -35,15 +35,13 @@ public class DiscoverWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Dis
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+                .inflate(R.layout.fragment_recycler_view_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Webcam webcam = webcamList.get(position);
-        String title = webcam.getTitle();
-        holder.mTitleTextView.setText(title);
         String imageLink = webcam.getImage().getDaylight().getThumbnail();
         Picasso.with(mContext).load(imageLink).fit().centerCrop()
                 .noFade()
@@ -59,8 +57,10 @@ public class DiscoverWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Dis
             String region = location.getRegion();
             String country = location.getCountry();
             String continent = location.getContinent();
-            String fullLocation = city + "," + region + "," + country + "," + continent;
-            holder.mLocationTextView.setText(fullLocation);
+            String cityAndRegion = city + ", " + region;
+            holder.mCityTextView.setText(cityAndRegion);
+            holder.mCountryTextView.setText(country);
+            holder.mContinentTextView.setText(continent);
         }
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,16 +101,18 @@ public class DiscoverWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Dis
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final View mView;
         private final ImageView mImageView;
-        private final TextView mTitleTextView;
-        private final TextView mLocationTextView;
-
+        private final TextView mCityTextView;
+        private final TextView mCountryTextView;
+        private final TextView mContinentTextView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mImageView = view.findViewById(R.id.item_imageView);
-            mTitleTextView = view.findViewById(R.id.title_tv);
-            mLocationTextView = view.findViewById(R.id.location_tv);
+            mCityTextView = view.findViewById(R.id.city_region_tv);
+            mCountryTextView = view.findViewById(R.id.country_tv);
+            mContinentTextView = view.findViewById(R.id.continent_tv);
+
 
         }
     }

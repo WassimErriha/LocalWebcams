@@ -54,7 +54,7 @@ public class FavoriteWebcamsFragment extends Fragment
         progressBar.setVisibility(View.INVISIBLE);
         emptyWebcamsArray = view.findViewById(R.id.empty_webcams_array);
         emptyWebcamsArray.setVisibility(View.VISIBLE);
-        emptyWebcamsArray.setText("No webcams saved");
+        emptyWebcamsArray.setText(R.string.no_webcams_saved);
         return view;
     }
 

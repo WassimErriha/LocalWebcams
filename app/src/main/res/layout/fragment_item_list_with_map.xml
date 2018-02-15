@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discover_webcams_fragment_layout"
@@ -8,19 +8,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/list_with_map"
+        android:name="com.example.wassim.localwebcams.ItemFragment"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.example.wassim.localwebcams.FavoriteWebcamsFragment"
+        tools:listitem="@layout/fragment_recycler_view_item" />
 
-        <ImageView
-            android:id="@+id/get_location_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_world_location" />
-    </RelativeLayout>
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/get_location_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:elevation="16dp"
+        android:src="@drawable/ic_world_location" />
 
     <ProgressBar
         android:id="@+id/progressBar1"
@@ -37,17 +43,4 @@
         android:text="@string/no_webcams_found_for_this_area"
         android:visibility="gone" />
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/list_with_map"
-            android:name="com.example.wassim.localwebcams.ItemFragment"
-            android:layout_width="match_parent"
-        android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            app:layoutManager="LinearLayoutManager"
-            tools:context="com.example.wassim.localwebcams.FavoriteWebcamsFragment"
-            tools:listitem="@layout/fragment_item" />
-
-</LinearLayout>
+</FrameLayout>
