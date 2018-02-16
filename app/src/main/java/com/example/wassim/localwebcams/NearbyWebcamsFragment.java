@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -30,12 +31,13 @@ import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecyclerViewAdapter.onListItemClickListener {
 
+    public static final String WEBCAM_EXTRA = "webcam";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 111;
     private static final double DEFAULT_LOCATION_LATITUDE = 37;
     private static final double DEFAULT_LOCATION_LONGITUDE = -122;
     private static final String IMAGE_TRANSITION_NAME = "image_transition_name";
-    NearbyWebcamsRecyclerViewAdapter adapter;
-    FusedLocationProviderClient client;
+    private NearbyWebcamsRecyclerViewAdapter adapter;
+    private FusedLocationProviderClient client;
     private Location mLastKnownLocation;
     private boolean mLocationPermissionGranted;
     private double locationLat;
@@ -43,7 +45,6 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
     private String nearbyWebcamsUrl;
     private ProgressBar progressBar;
     private TextView emptyWebcamArray;
-
 
     public NearbyWebcamsFragment() {
     }
@@ -70,10 +71,11 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
                     getLocationLatLong();
+                } else {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getActivity(), R.string.location_permission_denied, Toast.LENGTH_LONG).show();
                 }
             }
-
-            // TODO handel the case when user denies location permission
         }
     }
 
@@ -100,16 +102,15 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
-                            //if (task != null) {
                             if (task.isComplete()) {
                                 mLastKnownLocation = task.getResult();
                                 locationLat = mLastKnownLocation.getLatitude();
                                 locationLong = mLastKnownLocation.getLongitude();
-                                Log.e("TAG", "Current location latitude is " + locationLat + "\n location longitude is " + locationLong);
+                                Log.d("NEARBY_WEBCAM_FRAGMENT", "Current location latitude is " + locationLat + "\n location longitude is " + locationLong);
                             }
                         } else {
-                            Log.d("TAG", "Current location is null. Using defaults.");
-                            Log.e("TAG", "Exception: %s", task.getException());
+                            Log.d("NEARBY_WEBCAM_FRAGMENT", "Current location is null. Using defaults.");
+                            Log.e("NEARBY_WEBCAM_FRAGMENT", "Exception: %s", task.getException());
                             //TODO set default location
                             locationLat = DEFAULT_LOCATION_LATITUDE;
                             locationLong = DEFAULT_LOCATION_LONGITUDE;
@@ -121,7 +122,6 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                             protected void onPostExecute(String response) {
                                 adapter.swapData(response);
                                 progressBar.setVisibility(View.INVISIBLE);
-
                                 if (adapter.getItemCount() == 0) {
                                     emptyWebcamArray.setVisibility(View.VISIBLE);
                                 } else {
@@ -167,7 +167,7 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
     @Override
     public String onListItemClick(Webcam webcam, ImageView sharedImageView) {
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
-        intent.putExtra("webcam", webcam);
+        intent.putExtra(WEBCAM_EXTRA, webcam);
         intent.putExtra(IMAGE_TRANSITION_NAME, getString(R.string.shared_transition_name));
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this.getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
         startActivity(intent, options.toBundle());

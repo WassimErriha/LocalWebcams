@@ -20,6 +20,8 @@ import com.example.wassim.localwebcams.Objects.Webcam;
 
 public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecyclerViewAdapter.onListItemClickListener {
 
+    public static final String CONTINENT_WEBCAMS_URL = "continent_webcams_url";
+    public static final String WEBCAM_EXTRA = "webcam";
     private static final String IMAGE_TRANSITION_NAME = "image_transition_name";
     LiveWebcamsRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
@@ -33,9 +35,9 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        if (getArguments() != null && getArguments().containsKey("continent_webcams_url")) {
-            webcamsUrl = getArguments().getString("continent_webcams_url");
+        // arguments hold url sent from WidgetDetails activity
+        if (getArguments() != null && getArguments().containsKey(CONTINENT_WEBCAMS_URL)) {
+            webcamsUrl = getArguments().getString(CONTINENT_WEBCAMS_URL);
         } else {
             webcamsUrl = RemoteDataURIBuilder.STATIC_LIVE_WEBCAMS_URL;
         }
@@ -82,7 +84,7 @@ public class LiveWebcamsFragment extends Fragment implements LiveWebcamsRecycler
     @Override
     public String onListItemClick(Webcam webcam, ImageView sharedImageView) {
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
-        intent.putExtra("webcam", webcam);
+        intent.putExtra(WEBCAM_EXTRA, webcam);
         intent.putExtra(IMAGE_TRANSITION_NAME, getString(R.string.shared_transition_name));
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this.getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
         startActivity(intent, options.toBundle());

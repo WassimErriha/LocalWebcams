@@ -20,15 +20,17 @@ import android.widget.TextView;
 
 import com.example.wassim.localwebcams.Objects.Webcam;
 
-
 public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcamsRecyclerViewAdapter.onListItemClickListener {
 
+    public static final String EXTRA_LAT_LONG_URL = "lat_long_url";
+    public static final String WEBCAM_EXTRA = "webcam";
     private static final double DEFAULT_LOCATION_LATITUDE = 37;
     private static final double DEFAULT_LOCATION_LONGITUDE = -122;
     private static final String IMAGE_TRANSITION_NAME = "image_transition_name";
     public DiscoverWebcamsRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private TextView emptyWebcamsArray;
+    private String discoverWebcamsUrl;
 
     public DiscoverWebcamsFragment() {
     }
@@ -37,11 +39,12 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new DiscoverWebcamsRecyclerViewAdapter(getActivity(), null, this);
+        discoverWebcamsUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(DEFAULT_LOCATION_LATITUDE), Double.toString(DEFAULT_LOCATION_LONGITUDE));
+        fetchWebcams(discoverWebcamsUrl);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_item_list_with_map, container, false);
         final Context context = view.getContext();
         FloatingActionButton fab = view.findViewById(R.id.get_location_view);
@@ -63,13 +66,6 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        String discoverWebcamsUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(DEFAULT_LOCATION_LATITUDE), Double.toString(DEFAULT_LOCATION_LONGITUDE));
-        fetchWebcams(discoverWebcamsUrl);
-    }
-
     void showDialog() {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
@@ -88,7 +84,7 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
     @Override
     public String onListItemClick(Webcam webcam, ImageView sharedImageView) {
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
-        intent.putExtra("webcam", webcam);
+        intent.putExtra(WEBCAM_EXTRA, webcam);
         intent.putExtra(IMAGE_TRANSITION_NAME, getString(R.string.shared_transition_name));
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this.getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
         startActivity(intent, options.toBundle());
@@ -98,8 +94,8 @@ public class DiscoverWebcamsFragment extends Fragment implements DiscoverWebcams
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == 1 && data.hasExtra("lat_long_url")) {
-                String latLongUrl = data.getStringExtra("lat_long_url");
+        if (requestCode == 1 && resultCode == 1 && data.hasExtra(EXTRA_LAT_LONG_URL)) {
+            String latLongUrl = data.getStringExtra(EXTRA_LAT_LONG_URL);
             fetchWebcams(latLongUrl);
         }
     }

@@ -21,6 +21,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapDialogFragment extends DialogFragment implements OnMapReadyCallback {
 
+    public static final String LOCATION_LAT = "location_lat";
+    public static final String LOCATION_LONG = "location_long";
+    public static final String DEFAULT_LOCATION_TILE = "California";
+    public static final String EXTRA_LAT_LONG_URL = "lat_long_url";
     private static final double DEFAULT_LOCATION_LATITUDE = 39;
     private static final double DEFAULT_LOCATION_LONGITUDE = -122;
     private double locationLong;
@@ -36,8 +40,8 @@ public class MapDialogFragment extends DialogFragment implements OnMapReadyCallb
         // used to locate a webcam
         if (getArguments() != null) {
             // locate webcam
-            locationLat = getArguments().getDouble("location_lat");
-            locationLong = getArguments().getDouble("location_long");
+            locationLat = getArguments().getDouble(LOCATION_LAT);
+            locationLong = getArguments().getDouble(LOCATION_LONG);
         }
     }
 
@@ -58,7 +62,7 @@ public class MapDialogFragment extends DialogFragment implements OnMapReadyCallb
         mMap.moveCamera(CameraUpdateFactory.newLatLng(californiaArea));
         mMap.addMarker(new MarkerOptions()
                 .position(californiaArea)
-                .title("California"));
+                .title(DEFAULT_LOCATION_TILE));
 
         // if fragment is used to locate a webcam
         locateWebcam(mMap);
@@ -71,7 +75,7 @@ public class MapDialogFragment extends DialogFragment implements OnMapReadyCallb
                     LatLng pickedLocation = new LatLng(point.latitude, point.longitude);
                     mMap.addMarker(new MarkerOptions().position(pickedLocation));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(pickedLocation));
-                    Toast.makeText(getContext(), point.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Loading location webcams ...", Toast.LENGTH_SHORT).show();
                     String mapsWebcamUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(point.latitude), Double.toString(point.longitude));
                     sendResult(1, mapsWebcamUrl);
                 }
@@ -81,7 +85,7 @@ public class MapDialogFragment extends DialogFragment implements OnMapReadyCallb
 
     private void sendResult(int REQUEST_CODE, String latLongUrl) {
         Intent intent = new Intent();
-        intent.putExtra("lat_long_url", latLongUrl);
+        intent.putExtra(EXTRA_LAT_LONG_URL, latLongUrl);
         getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
     }
 

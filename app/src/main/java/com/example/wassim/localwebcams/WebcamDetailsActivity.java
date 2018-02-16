@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,14 +27,15 @@ import com.squareup.picasso.Picasso;
 
 public class WebcamDetailsActivity extends AppCompatActivity {
 
+    public static final String WEBCAM_EXTRA = "webcam";
+    public static final String LOCATION_LAT = "location_lat";
+    public static final String LOCATION_LONG = "location_long";
     private static final String IMAGE_TRANSITION_NAME = "image_transition_name";
-    long currentWebcamId;
+    private long currentWebcamId;
     private String stringCurrentWebcamId;
     private Webcam webcam;
 
     public void loadImage(Context context, String thumbnail, ImageView imageView) {
-
-
         Picasso.with(context).load(thumbnail).fit().centerCrop()
                 .noFade()
                 .into(imageView, new Callback() {
@@ -55,17 +57,15 @@ public class WebcamDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_webcam_details);
 
         TextView webcamTitleTV = findViewById(R.id.webcam_title_tv);
-
         ImageView mainImageView = findViewById(R.id.webcam_main_image);
 
-        if (getIntent() != null && getIntent().hasExtra("webcam")) {
-            webcam = getIntent().getExtras().getParcelable("webcam");
+        if (getIntent() != null && getIntent().hasExtra(WEBCAM_EXTRA)) {
+            webcam = getIntent().getExtras().getParcelable(WEBCAM_EXTRA);
             stringCurrentWebcamId = webcam.getId();
             currentWebcamId = Long.parseLong(stringCurrentWebcamId);
             String thumbnail = webcam.getImage().getDaylight().getThumbnail();
             loadImage(this, thumbnail, mainImageView);
             webcamTitleTV.setText(webcam.getTitle());
-
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 String imageTransitionName = getIntent().getExtras().getString(IMAGE_TRANSITION_NAME);
@@ -96,7 +96,7 @@ public class WebcamDetailsActivity extends AppCompatActivity {
             i.setData(Uri.parse(webcamLink));
             startActivity(i);
         } else {
-            Toast.makeText(this, "No link found for this selection", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.empty_link, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -104,13 +104,16 @@ public class WebcamDetailsActivity extends AppCompatActivity {
         ContentValues contentValues = new ContentValues();
         contentValues.put(WebcamContract.WebcamEntry.COLUMN_WEBCAM_ID, currentWebcamId);
         Uri uriOfWebcamInserted = getContentResolver().insert(WebcamContract.WebcamEntry.CONTENT_URI, contentValues);
-        Toast.makeText(WebcamDetailsActivity.this, "inserted " + uriOfWebcamInserted, Toast.LENGTH_LONG).show();
+        Log.e("WebcamDetailsActivity", "webcam inserted URI " + uriOfWebcamInserted);
+        if (uriOfWebcamInserted != null)
+            Toast.makeText(WebcamDetailsActivity.this, "Webcam inserted ", Toast.LENGTH_LONG).show();
     }
 
     private void deleteWebcam() {
         Uri singleWebcamUri = ContentUris.withAppendedId(WebcamContract.WebcamEntry.CONTENT_URI, currentWebcamId);
         int numberOfRowsDeleted = getContentResolver().delete(singleWebcamUri, null, null);
-        Toast.makeText(WebcamDetailsActivity.this, "Deleted " + numberOfRowsDeleted, Toast.LENGTH_LONG).show();
+        if (numberOfRowsDeleted == 1)
+            Toast.makeText(WebcamDetailsActivity.this, "Webcam deleted ", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -158,8 +161,8 @@ public class WebcamDetailsActivity extends AppCompatActivity {
         // Create and show the dialog.
         MapDialogFragment newFragment = new MapDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putDouble("location_lat", locationLat);
-        bundle.putDouble("location_long", locationLong);
+        bundle.putDouble(LOCATION_LAT, locationLat);
+        bundle.putDouble(LOCATION_LONG, locationLong);
         newFragment.setArguments(bundle);
         newFragment.show(fragmentTransaction, "maps_dialogue_fragment");
     }

@@ -21,10 +21,10 @@ import com.example.wassim.localwebcams.Objects.Webcam;
 import com.example.wassim.localwebcams.data.WebcamContract;
 
 import java.util.ArrayList;
-
 public class FavoriteWebcamsFragment extends Fragment
         implements FavoriteWebcamsRecyclerViewAdapter.onListItemClickListener {
 
+    public static final String WEBCAM_EXTRA = "webcam";
     private static final String IMAGE_TRANSITION_NAME = "image_transition_name";
     private FavoriteWebcamsRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
@@ -69,14 +69,13 @@ public class FavoriteWebcamsFragment extends Fragment
                 progressBar.setVisibility(View.INVISIBLE);
             }
         };
-
         ArrayList webcamIds = getFavoriteWebcamIds();
         if (webcamIds.size() > 0) {
             fetchWebcams.execute(RemoteDataURIBuilder.buildURLWithFavoriteWebcams(webcamIds));
             emptyWebcamsArray.setVisibility(View.INVISIBLE);
         } else {
             emptyWebcamsArray.setVisibility(View.VISIBLE);
-            //TODO why swap data here with a null value
+            // if last item is deleted from th database, refresh data.
             adapter.swapData(null);
         }
     }
@@ -106,7 +105,7 @@ public class FavoriteWebcamsFragment extends Fragment
     @Override
     public String onListItemClick(Webcam webcam, ImageView sharedImageView) {
         Intent intent = new Intent(getActivity(), WebcamDetailsActivity.class);
-        intent.putExtra("webcam", webcam);
+        intent.putExtra(WEBCAM_EXTRA, webcam);
         intent.putExtra(IMAGE_TRANSITION_NAME, getString(R.string.shared_transition_name));
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this.getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
         startActivity(intent, options.toBundle());

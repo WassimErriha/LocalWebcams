@@ -15,4 +15,6 @@
     <string name="delete_webcam">Delete Webcam</string>
     <string name="save_webcam">Save Webcam</string>
     <string name="locate_webcam">Locate webcam</string>
+    <string name="empty_link">No link found for this selection</string>
+    <string name="location_permission_denied">Location permission denied. No nearby webcams to display</string>
 </resources>

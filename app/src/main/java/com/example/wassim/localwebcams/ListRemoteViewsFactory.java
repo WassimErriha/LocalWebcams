@@ -12,9 +12,9 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
     private static final String CONTINENT_NAME = "continent_name";
     private static final String CONTINENT_ISO_CODE = "continent_iso_code";
-    Context mContext;
-    ArrayList<String> continentISOCodeArray;
-    ArrayList<String> continentNameArray;
+    private Context mContext;
+    private ArrayList<String> continentISOCodeArray;
+    private ArrayList<String> continentNameArray;
 
 
     public ListRemoteViewsFactory(Context context) {
@@ -58,7 +58,6 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_row);
         String continentName = continentNameArray.get(position);
         remoteViews.setTextViewText(R.id.row_text_view, continentName);
-
         // set a fill-intent, which will be used to fill in the pending intent template
         // that is set on the collection view in WidgetProvider.
         String continentISOCode = continentISOCodeArray.get(position);
