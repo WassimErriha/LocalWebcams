@@ -4,14 +4,18 @@
     tools:context="com.example.wassim.localwebcams.MainActivity">
     <item
         android:id="@+id/delete_webcam"
-        android:icon="@mipmap/ic_launcher_round"
-        android:orderInCategory="100"
-        android:title="Delete Webcam"
+        android:icon="@drawable/ic_bookmark_remove"
+        android:title="@string/delete_webcam"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/save_webcam"
-        android:icon="@mipmap/ic_launcher_round"
-        android:orderInCategory="2"
-        android:title="Save Webcam"
+        android:icon="@drawable/ic_bookmark_add"
+        android:title="@string/save_webcam"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/locate_webcam"
+        android:icon="@drawable/ic_world_location"
+        android:title="@string/locate_webcam"
         app:showAsAction="ifRoom" />
 </menu>

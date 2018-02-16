@@ -26,13 +26,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //design
-        // TODO redesign views to display data correctly
-        // TODO  App includes support for accessibility. That includes content descriptions, navigation using a D-pad, and, if applicable, non-audio versions of audio cues.
-        // TODO App keeps all strings in a strings.xml file and enables RTL layout switching on all layouts.
-
-        // TODO BONUS add a button in details activity to locate webcam and animate the dialogue map to the location
-
         if (ConnectivityUtils.isNetworkAvailable(this)) {
             SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
             mSectionsPagerAdapter.addFragment(new LiveWebcamsFragment(), LIVE_WEBCAM_FRAGMENT_TITLE);

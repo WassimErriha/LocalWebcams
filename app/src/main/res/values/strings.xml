@@ -12,4 +12,7 @@
     <string name="no_webcams_found_for_this_area">NO WEBCAMS FOUND FOR THIS AREA</string>
     <string name="shared_transition_name">webcam_image_shared_transition</string>
     <string name="no_webcams_saved">No webcams saved</string>
+    <string name="delete_webcam">Delete Webcam</string>
+    <string name="save_webcam">Save Webcam</string>
+    <string name="locate_webcam">Locate webcam</string>
 </resources>

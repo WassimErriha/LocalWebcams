@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -128,8 +130,37 @@ public class WebcamDetailsActivity extends AppCompatActivity {
             case R.id.save_webcam:
                 saveWebcam();
                 return true;
+            case R.id.locate_webcam:
+                locateWebcam();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void locateWebcam() {
+        if (webcam != null) {
+            double locationLat = webcam.getLocation().getLatitude();
+            double locationLong = webcam.getLocation().getLongitude();
+            showDialog(locationLat, locationLong);
+
+        }
+    }
+
+    private void showDialog(double locationLat, double locationLong) {
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentById(R.id.map);
+        if (prev != null)
+            fragmentTransaction.remove(prev);
+        // Create and show the dialog.
+        MapDialogFragment newFragment = new MapDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putDouble("location_lat", locationLat);
+        bundle.putDouble("location_long", locationLong);
+        newFragment.setArguments(bundle);
+        newFragment.show(fragmentTransaction, "maps_dialogue_fragment");
     }
 }
