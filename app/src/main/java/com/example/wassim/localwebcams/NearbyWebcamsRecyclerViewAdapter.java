@@ -99,9 +99,6 @@ public class NearbyWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Nearb
             }
         }
         notifyDataSetChanged();
-
-        // https://webcamstravel.p.mashape.com/webcams/list/nearby=50.46400878701797,-104.59118250757456,1000?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer%2Clive
-        // https://webcamstravel.p.mashape.com/webcams/list/nearby=-104.267428,50.4907558,1000?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer%2Clive
     }
 
     public interface onListItemClickListener {
