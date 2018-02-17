@@ -4,6 +4,7 @@ package com.example.wassim.localwebcams;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,8 +47,8 @@ public class NearbyWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Nearb
         String imageLink = webcam.getImage().getDaylight().getThumbnail();
         Picasso.with(mContext).load(imageLink).fit().centerCrop()
                 .noFade()
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .error(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.image_placeholder)
+                .error(R.drawable.error_image)
                 .into(holder.mImageView);
 
         ViewCompat.setTransitionName(holder.mImageView, mContext.getString(R.string.shared_transition_name));
@@ -86,13 +87,21 @@ public class NearbyWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<Nearb
         final Gson gson = gsonBuilder.create();
 
         if (response != null) {
-            Response result = gson.fromJson(response, new TypeToken<Response>() {
+            Response possessedResponse = gson.fromJson(response, new TypeToken<Response>() {
             }.getType());
-            webcamList = new ArrayList<>();
-            ArrayList<Webcam> webcams = (ArrayList<Webcam>) result.getResult().getWebcams();
-            webcamList.addAll(webcams);
+            String status = possessedResponse.getStatus();
+            if (possessedResponse.getStatus().equals("OK") && possessedResponse.getResult().getTotal() != 0) {
+                webcamList = new ArrayList<>();
+                ArrayList<Webcam> webcams = (ArrayList<Webcam>) possessedResponse.getResult().getWebcams();
+                webcamList.addAll(webcams);
+            } else {
+                Log.e(getClass().getName(), "Status: " + status);
+            }
         }
         notifyDataSetChanged();
+
+        // https://webcamstravel.p.mashape.com/webcams/list/nearby=50.46400878701797,-104.59118250757456,1000?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer%2Clive
+        // https://webcamstravel.p.mashape.com/webcams/list/nearby=-104.267428,50.4907558,1000?lang=en&show=webcams%3Aimage%2Clocation%2Cplayer%2Clive
     }
 
     public interface onListItemClickListener {

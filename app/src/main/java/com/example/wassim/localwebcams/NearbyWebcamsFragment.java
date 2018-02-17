@@ -104,28 +104,34 @@ public class NearbyWebcamsFragment extends Fragment implements NearbyWebcamsRecy
                             // Set the map's camera position to the current location of the device.
                             if (task.isComplete()) {
                                 mLastKnownLocation = task.getResult();
-                                locationLat = mLastKnownLocation.getLatitude();
-                                locationLong = mLastKnownLocation.getLongitude();
-                                Log.d("NEARBY_WEBCAM_FRAGMENT", "Current location latitude is " + locationLat + "\n location longitude is " + locationLong);
+                                if (mLastKnownLocation != null) {
+                                    locationLat = mLastKnownLocation.getLatitude();
+                                    locationLong = mLastKnownLocation.getLongitude();
+                                    Toast.makeText(getContext(), "Showing local webcams", Toast.LENGTH_LONG).show();
+                                    Log.d("NEARBY_WEBCAM_FRAGMENT", "Current location latitude is " + locationLat + "\n location longitude is " + locationLong);
+                                }
                             }
                         } else {
                             Log.d("NEARBY_WEBCAM_FRAGMENT", "Current location is null. Using defaults.");
                             Log.e("NEARBY_WEBCAM_FRAGMENT", "Exception: %s", task.getException());
-                            //TODO set default location
                             locationLat = DEFAULT_LOCATION_LATITUDE;
                             locationLong = DEFAULT_LOCATION_LONGITUDE;
+                            Toast.makeText(getContext(), "Unable to get current device location.\n Showing default location instead", Toast.LENGTH_LONG).show();
                         }
                         nearbyWebcamsUrl = RemoteDataURIBuilder.buildURLWithLatLong(Double.toString(locationLat), Double.toString(locationLong));
+                        Log.e("NEARBY_WEBCAM_FRAGMENT", "URL " + nearbyWebcamsUrl);
                         @SuppressLint("StaticFieldLeak")
                         FetchWebcams fetchWebcams = new FetchWebcams(getContext()) {
                             @Override
                             protected void onPostExecute(String response) {
-                                adapter.swapData(response);
-                                progressBar.setVisibility(View.INVISIBLE);
-                                if (adapter.getItemCount() == 0) {
-                                    emptyWebcamArray.setVisibility(View.VISIBLE);
-                                } else {
-                                    emptyWebcamArray.setVisibility(View.INVISIBLE);
+                                if (response != null) {
+                                    adapter.swapData(response);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    if (adapter.getItemCount() == 0) {
+                                        emptyWebcamArray.setVisibility(View.VISIBLE);
+                                    } else {
+                                        emptyWebcamArray.setVisibility(View.INVISIBLE);
+                                    }
                                 }
                             }
                         };

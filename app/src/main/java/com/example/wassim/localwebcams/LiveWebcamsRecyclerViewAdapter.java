@@ -44,8 +44,8 @@ public class LiveWebcamsRecyclerViewAdapter extends RecyclerView.Adapter<LiveWeb
         String imageLink = webcam.getImage().getDaylight().getThumbnail();
         Picasso.with(mContext).load(imageLink).fit().centerCrop()
                 .noFade()
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .error(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.image_placeholder)
+                .error(R.drawable.error_image)
                 .into(holder.mImageView);
 
         ViewCompat.setTransitionName(holder.mImageView, mContext.getString(R.string.shared_transition_name));

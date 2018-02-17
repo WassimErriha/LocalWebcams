@@ -17,4 +17,6 @@
     <string name="locate_webcam">Locate webcam</string>
     <string name="empty_link">No link found for this selection</string>
     <string name="location_permission_denied">Location permission denied. No nearby webcams to display</string>
+    <string name="launch_google_maps">launch google maps</string>
+    <string name="webcam_image">webcam image</string>
 </resources>

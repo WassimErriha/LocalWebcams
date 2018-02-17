@@ -38,6 +38,8 @@ public class WebcamDetailsActivity extends AppCompatActivity {
     public void loadImage(Context context, String thumbnail, ImageView imageView) {
         Picasso.with(context).load(thumbnail).fit().centerCrop()
                 .noFade()
+                .placeholder(R.drawable.image_placeholder)
+                .error(R.drawable.error_image)
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
